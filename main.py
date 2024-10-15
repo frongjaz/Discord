@@ -37,19 +37,27 @@ def get_random_welcome_message(member):
         f"Hey {member.mention}, welcome to SweetDessert! เรามีขนมให้ลองเต็มไปหมด 🍮",
     ]
     return random.choice(messages)
+
 # เมื่อบอทพร้อมทำงาน
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
-    await bot.tree.sync()
+    # ซิงค์คำสั่ง Application Command เฉพาะเมื่อมีการเพิ่มคำสั่งใหม่
+    try:
+        synced = await bot.tree.sync()
+        print(f"Synced {len(synced)} commands")
+    except Exception as e:
+        print(f"Error syncing commands: {e}")
 
 # เมื่อมีสมาชิกเข้าร่วม
 @bot.event
 async def on_member_join(member):
     channel = bot.get_channel(1218562161966841897)
-
    
     if channel is not None:
+        # แท็กผู้ใช้ด้วยการ mention ก่อน
+        await channel.send(f"{member.mention} ยินดีต้อนรับ!")
+
         # สร้าง Embed ที่มีการปรับแต่งมากขึ้น
         embed = discord.Embed(
             title="🎉 ยินดีต้อนรับสู่ SweetDessert! 🎉",
