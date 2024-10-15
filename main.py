@@ -75,15 +75,7 @@ async def on_member_join(member):
         await channel.send(embed=embed, view=view)
     else:
         print("ไม่พบช่องที่ระบุสำหรับการต้อนรับสมาชิกใหม่")
-def get_moo_deng_message():
-    messages = [
-        "หมูเด้งแสนอร่อย เด้งดึ๋ง ๆ 🐷",
-        "หมูเด้งพร้อมเสิร์ฟ! ยั่ว ๆ เลย 🍖",
-        "หมูเด้งที่สุดในสามโลก! 🌍🐽",
-        "ใครอยากกินหมูเด้งบ้าง? 😋",
-        "รับหมูเด้งสักจานไหมครับ/คะ? 🍽️"
-    ]
-    return random.choice(messages)
+
 # เมื่อมีข้อความส่งมา
 @bot.event
 async def on_message(message):
@@ -105,10 +97,10 @@ async def on_message(message):
     if message.content.lower() == '!clear':
         user_numbers = []
         await message.channel.send("Reset เรียบร้อย!")
-
+    
     if message.content.lower() == '!หมูเด้ง':
-        moo_deng_message = get_moo_deng_message()
-        await message.channel.send(moo_deng_message)
+        moo_deng_gif_url = "https://media1.tenor.com/m/7Rw8rOLsNOEAAAAd/moodeng.gif"
+        await message.channel.send(moo_deng_gif_url)
 
 @bot.tree.command(name='rank', description='แสดง rank ของคนมี HSOA')
 async def rankcommand(interaction):
