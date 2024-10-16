@@ -5,7 +5,7 @@ from discord.ext import commands, tasks
 from myserver import server_on  # Assuming this starts your server
 from discord import app_commands
 from threading import Thread
-from datetime import datetime, timedelta
+from datetime import datetime, time
 
 intents = discord.Intents.default()
 intents.guilds = True
@@ -44,7 +44,6 @@ def get_random_welcome_message(member):
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
-    # ซิงค์คำสั่ง Application Command เฉพาะเมื่อมีการเพิ่มคำสั่งใหม่
     try:
         synced = await bot.tree.sync()
         print(f"Synced {len(synced)} commands")
@@ -80,9 +79,9 @@ async def on_member_join(member):
         await channel.send(embed=embed, view=view)
     else:
         print("ไม่พบช่องที่ระบุสำหรับการต้อนรับสมาชิกใหม่")
-
+        
 # ฟังก์ชันแจ้งเตือนทุกวันศุกร์
-@tasks.loop(time=datetime.utcnow().replace(hour=9, minute=0, second=0))  # แจ้งเตือนเวลา 9:00 UTC (หรือ 16:00 น. ในประเทศไทย)
+@tasks.loop(time=time(9, 0))  # แจ้งเตือนเวลา 9:00 UTC (หรือ 16:00 น. ในประเทศไทย)
 async def friday_reminder():
     current_day = datetime.utcnow().weekday()
     if current_day == 4:  # ถ้าวันนี้คือวันศุกร์ (Friday = 4)
@@ -149,10 +148,8 @@ async def rankcommand(interaction):
     await interaction.response.send_message(rank_numbers())
 
 # Start the bot and the server concurrently
-if __name__ == "__main__":
-    # Run the Flask server in a separate thread
+if __name__ == "__main__":    
     flask_thread = Thread(target=server_on)
     flask_thread.start()
 
-    # Start the Discord bot
     bot.run(os.getenv('TOKEN'))
