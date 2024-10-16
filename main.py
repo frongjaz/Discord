@@ -1,10 +1,11 @@
 import os
 import random
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from myserver import server_on  # Assuming this starts your server
 from discord import app_commands
 from threading import Thread
+from datetime import datetime, timedelta
 
 intents = discord.Intents.default()
 intents.guilds = True
@@ -16,6 +17,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 user_numbers = []
 target_channel_id = 1290924217184948236
+SweetDessert_role = 1218124815378940035
 
 # Function to rank numbers
 def rank_numbers():
@@ -48,6 +50,9 @@ async def on_ready():
         print(f"Synced {len(synced)} commands")
     except Exception as e:
         print(f"Error syncing commands: {e}")
+    
+    # เริ่มการแจ้งเตือนทุกวันศุกร์
+    friday_reminder.start()
 
 # เมื่อมีสมาชิกเข้าร่วม
 @bot.event
@@ -76,31 +81,68 @@ async def on_member_join(member):
     else:
         print("ไม่พบช่องที่ระบุสำหรับการต้อนรับสมาชิกใหม่")
 
+# ฟังก์ชันแจ้งเตือนทุกวันศุกร์
+@tasks.loop(time=datetime.utcnow().replace(hour=9, minute=0, second=0))  # แจ้งเตือนเวลา 9:00 UTC (หรือ 16:00 น. ในประเทศไทย)
+async def friday_reminder():
+    current_day = datetime.utcnow().weekday()
+    if current_day == 4:  # ถ้าวันนี้คือวันศุกร์ (Friday = 4)
+        channel = bot.get_channel(target_channel_id)
+        if channel is not None:
+            mention_role = f"<@&{SweetDessert_role}>"
+            await channel.send(f"{mention_role} กรุณากรอกตราใหญ่ (HSOA) ของคุณภายในวันนี้!")
+        else:
+            print("ไม่พบช่องที่ระบุสำหรับการแจ้งเตือน")
+
 # เมื่อมีข้อความส่งมา
 @bot.event
 async def on_message(message):
-    global user_numbers  # Declare global variable
+    global user_numbers
 
     if message.author.bot:
         return
 
+    # ฟังก์ชันจัดการกับการพิมพ์ตัวเลขในช่องที่กำหนด
     if message.channel.id == target_channel_id and message.content.isdigit():
         number = int(message.content)
         username = message.author.display_name
-        user_numbers.append({'username': username, 'number': number})
-        await message.channel.send(f"คุณ {username} มีตราใหญ่ (HSOA) : {number}")
+        
+        # ตรวจสอบว่าผู้ใช้อยู่ในรายการ user_numbers แล้วหรือไม่
+        user_exists = False
+        for user in user_numbers:
+            if user['username'] == username:
+                old_number = user['number']  # เก็บค่าตัวเลขเดิม
+                user['number'] = number  # แทนที่ตัวเลขเก่าด้วยตัวเลขใหม่
+                user_exists = True
+                
+                # คำนวณการเปลี่ยนแปลงและเปอร์เซ็นต์
+                difference = number - old_number
+                if old_number != 0:
+                    percentage_change = (difference / old_number) * 100
+                else:
+                    percentage_change = 0
 
+                # แสดงข้อความการเปลี่ยนแปลง
+                change_direction = "เพิ่มขึ้น" if difference > 0 else "ลดลง" if difference < 0 else "ไม่เปลี่ยนแปลง"
+                await message.channel.send(
+                    f"คุณ {username} ได้เปลี่ยนตราใหญ่ (HSOA) จาก {old_number} เป็น {number} "
+                    f"({change_direction} {abs(difference)} หน่วย, {abs(percentage_change):.2f}%)"
+                )
+                break
+
+        # ถ้าผู้ใช้ยังไม่อยู่ในรายการ ให้เพิ่มใหม่และแสดงข้อความแรก
+        if not user_exists:
+            user_numbers.append({'username': username, 'number': number})
+            await message.channel.send(f"คุณ {username} มีตราใหญ่ (HSOA) : {number}")
+
+    # แสดงอันดับ HSOA
     if message.content.lower() == '!rank':
         ranking_message = rank_numbers()
         await message.channel.send(ranking_message)
 
+    # Reset ข้อมูล
     if message.content.lower() == '!clear':
         user_numbers = []
-        await message.channel.send("Reset เรียบร้อย!")
-    
-    if message.content.lower() == '!หมูเด้ง':
-        moo_deng_gif_url = "https://media1.tenor.com/m/7Rw8rOLsNOEAAAAd/moodeng.gif"
-        await message.channel.send(moo_deng_gif_url)
+        await message.channel.send("Clear เรียบร้อย!")
 
 @bot.tree.command(name='rank', description='แสดง rank ของคนมี HSOA')
 async def rankcommand(interaction):
