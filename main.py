@@ -1,6 +1,7 @@
 import os
 import random
 import discord
+import requests
 from discord.ext import commands
 from threading import Thread
 from myserver import server_on  # Assuming this starts your server
@@ -45,13 +46,26 @@ async def on_message(message):
     if message.author.bot:
         return
 
-    # ฟังก์ชันจัดการกับการพิมพ์ตัวเลขในช่องที่กำหนด
     if message.channel.id == GR_channel_id and message.content.isdigit():
         number = int(message.content)
         username = message.author.display_name
 
-        sheet.add_GR_Data(username,number)
-        await message.channel.send(f"ข้อมูลของคุณ {username} ได้ถูกบันทึกแล้ว: {number}")
+        # ข้อมูลที่ต้องการส่งไปยัง Google Sheets
+        data = {
+            'name': username,
+            'GR_value': number
+        }
+
+        # URL ของ Web App ที่ได้จาก Google Apps Script
+        url = 'https://script.google.com/macros/s/AKfycbxdlxls3pHHab_b_fGVdBjGUNsczUGiOKrdd3STi-BFudmRZHLrfaARResrkuUPs_Tn1w/exec'
+
+        # ส่งข้อมูลไปยัง Google Sheets
+        response = requests.post(url, json=data)
+
+        if response.status_code == 200:
+            await message.channel.send(f"ข้อมูลของคุณ {username} ได้ถูกบันทึกแล้ว: {number}")
+        else:
+            await message.channel.send("เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาแจ้งบอสฟร้อง.")
 
     if message.channel.id == target_channel_id and message.content.isdigit():
         number = int(message.content)
