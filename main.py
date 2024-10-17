@@ -20,6 +20,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 target_channel_id = 1290924217184948236
 GR_channel_id = 1242868461982580807
 SweetDessert_role = 1218124815378940035
+url = 'https://script.google.com/macros/s/AKfycbxdlxls3pHHab_b_fGVdBjGUNsczUGiOKrdd3STi-BFudmRZHLrfaARResrkuUPs_Tn1w/exec'
 
 # เมื่อบอทพร้อมทำงาน
 @bot.event
@@ -48,7 +49,6 @@ async def on_message(message):
     if message.channel.id == GR_channel_id and message.content.isdigit():
         number = int(message.content.replace(',', ''))  # ลบคอมม่า
         username = message.author.display_name
-        url = 'https://script.google.com/macros/s/AKfycbxdlxls3pHHab_b_fGVdBjGUNsczUGiOKrdd3STi-BFudmRZHLrfaARResrkuUPs_Tn1w/exec'
         # ดึงค่าที่เก่าจาก Google Sheets
         previous_value = get_previous_value(username)
 
@@ -110,6 +110,7 @@ def get_previous_value(username):
         data = response.json()
         return data.get('GR_value')  # ค่าที่เก่าจะต้องอยู่ในฟิลด์นี้
     return None
+
 
 @bot.tree.command(name='rank', description='แสดง rank ของคนมี HSOA')
 async def rankcommand(interaction):
