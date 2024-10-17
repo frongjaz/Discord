@@ -141,14 +141,14 @@ async def on_message(message):
         rank.user_numbers = []
         await message.channel.send("Clear เรียบร้อย!")
     
-    if message.content.startswith('!miniboss'):
+    if message.content.startswith('!มินิ'):
         parts = message.content.split()
         if len(parts) >= 3:
             boss_name = parts[1] 
             death_time = parts[2] 
             await create_miniboss(message.channel, boss_name, death_time)
         else:
-            await message.channel.send("กรุณาใส่ชื่อบอสและเวลาที่ตาย เช่น !miniboss <ชื่อบอส> <เวลาตาย>")
+            await message.channel.send("กรุณาใส่ชื่อบอสและเวลาที่ตาย เช่น !มินิ <ชื่อบอส> <เวลาตาย>")
     else:
         await bot.process_commands(message)
 
@@ -167,6 +167,17 @@ async def create_miniboss(channel, boss_name, death_time):
     else:
         await channel.send("ไม่พบชื่อบอสที่กรอก กรุณาลองใหม่อีกครั้ง.")
 
+@bot.command(name='บอส')
+async def miniboss_list(ctx):
+    miniboss_info = []
+    for boss in miniboss.minibosses:
+        spawn_time_range = f"{boss.spawn_time_range[0]} - {boss.spawn_time_range[1]} ชั่วโมง"
+        miniboss_info.append(f"{boss.name}: ระยะเวลาการเกิด {spawn_time_range}")
+
+    if miniboss_info:
+        await ctx.send("รายชื่อบอสทั้งหมด:\n" + "\n".join(miniboss_info))
+    else:
+        await ctx.send("ไม่มีบอสในรายการ.")
 
 
 @bot.tree.command(name='rank', description='แสดง rank ของคนมี HSOA')
