@@ -141,7 +141,7 @@ async def on_message(message):
         rank.user_numbers = []
         await message.channel.send("Clear เรียบร้อย!")
     
-    if message.content.lower('!miniboss'):
+    if message.content.lower().startswith('!miniboss'):
         parts = message.content.split()
         if len(parts) >= 3:
             boss_name = parts[1] 
