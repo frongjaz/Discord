@@ -49,8 +49,10 @@ async def on_message(message):
     if message.channel.id == GR_channel_id and message.content.isdigit():
         number = int(message.content)
         username = message.author.display_name
+
         sheet.add_GR_Data(username,number)
-        
+        await message.channel.send(f"ข้อมูลของคุณ {username} ได้ถูกบันทึกแล้ว: {number}")
+
     if message.channel.id == target_channel_id and message.content.isdigit():
         number = int(message.content)
         username = message.author.display_name
