@@ -47,12 +47,14 @@ class Miniboss:
                 spawn_location_description = "จุดเกิดไม่ทราบ"
 
             embed = discord.Embed(
-                title=f"บอส {self.name} ตายแล้ว",
-                description=f"บอส {self.name} ตายเมื่อเวลา {death_time_str}. "
-                            f"บอสจะเกิดในช่วงเวลา {spawn_times[0].strftime('%H:%M')} - {spawn_times[1].strftime('%H:%M')}. "
-                            f"จุดเกิดคือ {spawn_location_description}.",
-                color=discord.Color.from_str(self.color)  # ใช้สีของวง
-            )
+            title=f"🦹‍♂️ บอส {self.name} ตายแล้ว",
+            description=(
+                f"🕒 บอส {self.name} ตายเมื่อเวลา **{death_time_str}**.\n"
+                f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_times[0].strftime('%H:%M')} - {spawn_times[1].strftime('%H:%M')}**.\n"
+                f"{spawn_location_description}"
+            ),
+            color=discord.Color.from_str(self.color)  
+        )
             if self.image:
                 embed.set_image(url=self.image)
             await channel.send(embed=embed)

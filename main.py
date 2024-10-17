@@ -17,7 +17,7 @@ intents.message_content = True
 intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
-
+icon = "https://i.imgur.com/ZdfJpK4.png"
 target_channel_id = 1290924217184948236
 GR_channel_id = 1242868461982580807
 SweetDessert_role = 1218124815378940035
@@ -103,7 +103,7 @@ async def on_message(message):
                     value=f"**{discord.utils.format_dt(discord.utils.utcnow(), 'T')}**",  # แสดงเวลาปัจจุบัน
                     inline=True
                 )
-                embed.set_footer(text="SweetDessert GR | ขอบคุณที่ใช้งาน!", icon_url="https://i.imgur.com/ZdfJpK4.png")
+                embed.set_footer(text="SweetDessert GR | ขอบคุณที่ใช้งาน!", icon_url=icon)
                 
                 await message.channel.send(embed=embed)
         else:
@@ -169,15 +169,23 @@ async def create_miniboss(channel, boss_name, death_time):
 
 @bot.command(name='บอส')
 async def miniboss_list(ctx):
-    miniboss_info = []
-    for boss in miniboss.minibosses:
-        spawn_time_range = f"{boss.spawn_time_range[0]} - {boss.spawn_time_range[1]} ชั่วโมง"
-        miniboss_info.append(f"{boss.name}: ระยะเวลาการเกิด {spawn_time_range}")
+    # สร้าง Embed สำหรับแสดงข้อมูล
+    embed = discord.Embed(
+        title="📜 รายชื่อบอสและระยะเวลาการเกิด",
+        description="นี่คือรายชื่อบอสทั้งหมดที่มีในระบบ:",
+        color=discord.Color.blue()  # คุณสามารถเลือกสีที่ต้องการ
+    )
 
-    if miniboss_info:
-        await ctx.send("รายชื่อบอสทั้งหมด:\n" + "\n".join(miniboss_info))
-    else:
-        await ctx.send("ไม่มีบอสในรายการ.")
+    # วนลูปเพื่อสร้างข้อมูลบอส
+    for boss in miniboss.minibosses:
+        spawn_time_range = f"⏰ {boss.spawn_time_range[0]} - {boss.spawn_time_range[1]} ชั่วโมง"
+        embed.add_field(name=f"🦹‍♂️ {boss.name}", value=spawn_time_range, inline=False)
+
+    embed.set_footer(text="ขอบคุณที่ใช้งาน! 😊", icon_url=icon)  # แสดงข้อความท้าย
+
+    # ส่ง Embed
+    await ctx.send(embed=embed)
+
 
 
 @bot.tree.command(name='rank', description='แสดง rank ของคนมี HSOA')
