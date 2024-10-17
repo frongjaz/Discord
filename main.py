@@ -7,6 +7,7 @@ from myserver import server_on  # Assuming this starts your server
 from Component import new_member
 from Component import noti_c3  
 from Component import rank  
+from Component import sheet
 
 intents = discord.Intents.default()
 intents.guilds = True
@@ -17,6 +18,7 @@ intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 target_channel_id = 1290924217184948236
+GR_channel_id = 1242868461982580807
 SweetDessert_role = 1218124815378940035
 
 # เมื่อบอทพร้อมทำงาน
@@ -44,6 +46,11 @@ async def on_message(message):
         return
 
     # ฟังก์ชันจัดการกับการพิมพ์ตัวเลขในช่องที่กำหนด
+    if message.channel.id == GR_channel_id and message.content.isdigit():
+        number = int(message.content)
+        username = message.author.display_name
+        sheet.add_GR_Data(username,number)
+        
     if message.channel.id == target_channel_id and message.content.isdigit():
         number = int(message.content)
         username = message.author.display_name
