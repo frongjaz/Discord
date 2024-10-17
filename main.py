@@ -20,7 +20,8 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 target_channel_id = 1290924217184948236
 GR_channel_id = 1242868461982580807
 SweetDessert_role = 1218124815378940035
-url = 'https://script.google.com/macros/s/AKfycbxdlxls3pHHab_b_fGVdBjGUNsczUGiOKrdd3STi-BFudmRZHLrfaARResrkuUPs_Tn1w/exec?'
+# URL ของ Web App ที่ได้จาก Google Apps
+url = 'https://script.google.com/macros/s/AKfycbxdlxls3pHHab_b_fGVdBjGUNsczUGiOKrdd3STi-BFudmRZHLrfaARResrkuUPs_Tn1w/exec'
 
 # เมื่อบอทพร้อมทำงาน
 @bot.event
@@ -47,30 +48,20 @@ async def on_message(message):
         return
 
     if message.channel.id == GR_channel_id and message.content.isdigit():
-        number = int(message.content) 
+        number = int(message.content)
         username = message.author.display_name
-        previous_value = get_previous_value(username)
 
-        # ส่งข้อมูลไปยัง Google Sheets
-        response = requests.post(url, json={'name': username, 'GR_value': number})
+        data = {
+            'name': username,
+            'GR_value': number
+        }
+
+        response = requests.post(url, json=data)
 
         if response.status_code == 200:
             await message.channel.send(f"ข้อมูลของคุณ {username} ได้ถูกบันทึกแล้ว: {number}")
-
-            if previous_value is not None:
-                difference = number - previous_value
-                if previous_value != 0:
-                    percentage_change = (difference / previous_value) * 100
-                else:
-                    percentage_change = 0
-
-                change_direction = "เพิ่มขึ้น" if difference > 0 else "ลดลง" if difference < 0 else "ไม่เปลี่ยนแปลง"
-                await message.channel.send(
-                    f"การเปลี่ยนแปลง: {change_direction} {abs(difference)} หน่วย ({abs(percentage_change):.2f}%)"
-                )
         else:
-             print(f"Error {response.status_code}: {response.text}")  # เพิ่มการพิมพ์ข้อผิดพลาด
-             await message.channel.send("เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาแจ้งบอสฟร้อง.")
+            await message.channel.send("เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาแจ้งบอสฟร้อง.")
 
     if message.channel.id == target_channel_id and message.content.isdigit():
         number = int(message.content)
@@ -103,14 +94,6 @@ async def on_message(message):
     if message.content.lower() == '!clear':
         rank.user_numbers = []
         await message.channel.send("Clear เรียบร้อย!")
-def get_previous_value(username):
-    # ฟังก์ชันนี้จะต้องไปดึงค่าจาก Google Sheets เพื่อหาค่าที่เก่าก่อนหน้านี้
-    response = requests.get(url + '?username=' + username)
-    if response.status_code == 200:
-        data = response.json()
-        return data.get('GR_value')  # ค่าที่เก่าจะต้องอยู่ในฟิลด์นี้
-    return None
-
 
 @bot.tree.command(name='rank', description='แสดง rank ของคนมี HSOA')
 async def rankcommand(interaction):
