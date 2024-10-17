@@ -46,12 +46,12 @@ class Miniboss:
             await channel.send(embed=embed)
         else:
             await channel.send("รูปแบบเวลาไม่ถูกต้อง กรุณาใช้รูปแบบ HH:MM")
-            
+
 url = "https://scontent.fbkk29-4.fna.fbcdn.net/v/t39.30808-6/463103563_122106380414560606_7643064554048604016_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=k4plQ7Ge2JYQ7kNvgE2RCRr&_nc_zt=23&_nc_ht=scontent.fbkk29-4.fna&_nc_gid=AkaTEo2eD5El_nEMeaWcc4e&oh=00_AYC7KNk25yQO0Gf02tQRapY6I3WFDoOixryPxwMuhC8ZCg&oe=67168F99"
 # รายการบอสขนาดเล็ก
 minibosses = [
-    Miniboss("อังโกลท์", (3.5, 6.5), "#000000", url),  # วงดำ
-    Miniboss("คิอารอน", (4.5, 7.5), "#FF0000", url),  # วงแดง
-    Miniboss("กริซ", (5.5, 8.5), "#0000FF", url),  # วงฟ้า
-    Miniboss("อินเฟรโน", (6.5, 9.5), "#00FF00", url),  # วงเขียว
+    Miniboss("อังโกลท์", (3.5, 6.5), "วงดำ", url),  # วงดำ
+    Miniboss("คิอารอน", (4.5, 7.5), "วงแดง", url),  # วงแดง
+    Miniboss("กริซ", (5.5, 8.5), "วงฟ้า", url),  # วงฟ้า
+    Miniboss("อินเฟรโน", (6.5, 9.5), "วงเขียว", url),  # วงเขียว
 ]
