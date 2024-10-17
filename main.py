@@ -8,7 +8,6 @@ from myserver import server_on  # Assuming this starts your server
 from Component import new_member
 from Component import noti_c3  
 from Component import rank  
-from Component import sheet
 
 intents = discord.Intents.default()
 intents.guilds = True
@@ -35,12 +34,12 @@ async def on_ready():
     # เริ่มการแจ้งเตือนทุกวันศุกร์
     noti_c3.friday_reminder.start(bot)
     noti_c3.saturday_reminder.start(bot)
-# เรียกใช้งานฟังก์ชัน on_member_join จาก new_member.py
+
 @bot.event
 async def on_member_join(member):
     await new_member.on_member_join(bot, member)
 
-# เมื่อมีข้อความส่งมา
+
 @bot.event
 async def on_message(message):
     if message.author.bot:
@@ -50,16 +49,13 @@ async def on_message(message):
         number = int(message.content)
         username = message.author.display_name
 
-        # ข้อมูลที่ต้องการส่งไปยัง Google Sheets
         data = {
             'name': username,
             'GR_value': number
         }
-
         # URL ของ Web App ที่ได้จาก Google Apps Script
         url = 'https://script.google.com/macros/s/AKfycbxdlxls3pHHab_b_fGVdBjGUNsczUGiOKrdd3STi-BFudmRZHLrfaARResrkuUPs_Tn1w/exec'
 
-        # ส่งข้อมูลไปยัง Google Sheets
         response = requests.post(url, json=data)
 
         if response.status_code == 200:
@@ -70,8 +66,6 @@ async def on_message(message):
     if message.channel.id == target_channel_id and message.content.isdigit():
         number = int(message.content)
         username = message.author.display_name
-        
-        # ใช้ฟังก์ชัน add_user เพื่อเพิ่มหรืออัปเดตข้อมูลผู้ใช้
         old_number, user_exists = rank.add_user(username, number)
 
         # คำนวณการเปลี่ยนแปลงและเปอร์เซ็นต์
