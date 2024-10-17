@@ -104,6 +104,7 @@ async def on_message(message):
                     inline=True
                 )
                 embed.set_footer(text="SweetDessert GR | ขอบคุณที่ใช้งาน!", icon_url="https://i.imgur.com/ZdfJpK4.png")
+                
                 await message.channel.send(embed=embed)
         else:
             await message.channel.send("เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาแจ้งบอสฟร้อง.")
@@ -139,6 +140,18 @@ async def on_message(message):
     if message.content.lower() == '!clear':
         rank.user_numbers = []
         await message.channel.send("Clear เรียบร้อย!")
+    
+    if message.content.lower('!miniboss'):
+        parts = message.content.split()
+        if len(parts) >= 3:
+            boss_name = parts[1] 
+            death_time = parts[2]  # สมมติว่าเวลาตายอยู่ที่ index 2
+            await create_miniboss(message.channel, boss_name, death_time)
+        else:
+            await message.channel.send("กรุณาใส่ชื่อบอสและเวลาที่ตาย เช่น !miniboss <ชื่อบอส> <เวลาตาย>")
+    else:
+        await bot.process_commands(message)
+
 def get_previous_value(username):
     # ฟังก์ชันนี้จะต้องไปดึงค่าจาก Google Sheets เพื่อหาค่าที่เก่าก่อนหน้านี้
     response = requests.get(url + '?username=' + username)
@@ -149,13 +162,12 @@ def get_previous_value(username):
 
 @bot.command(name='miniboss')
 async def create_miniboss(ctx, boss_name: str, death_time: str):
-    print(f"{boss_name} ตายตอน {death_time}")  # เพิ่มการพิมพ์ดีบัก
     for boss in miniboss.minibosses:
-        if boss.name == boss_name:
+        if boss.name.lower() == boss_name.lower():  # ตรวจสอบชื่อบอสให้ตรง
             await boss.spawn(death_time, ctx)
             return
-    
     await ctx.send("ไม่พบชื่อบอสที่กรอก กรุณาลองใหม่อีกครั้ง.")
+
 
 @bot.tree.command(name='rank', description='แสดง rank ของคนมี HSOA')
 async def rankcommand(interaction):
