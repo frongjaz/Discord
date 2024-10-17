@@ -160,6 +160,23 @@ async def create_miniboss(ctx, boss_name: str, death_time: str):
 async def rankcommand(interaction):
     await interaction.response.send_message(rank.rank_numbers())
 
+@bot.tree.command(name='boss_info', description='แสดงข้อมูลบอสที่เลือก')
+async def boss_info(interaction: discord.Interaction, boss_name: str):
+    # ค้นหาบอสในรายชื่อ minibosses
+    miniboss = next((b for b in miniboss.minibosses if b.name == boss_name), None)
+    
+    if miniboss:
+        # สร้าง Embed สำหรับแสดงข้อมูล
+        embed = discord.Embed(
+            title=f"ข้อมูลบอส: {miniboss.name}",
+            description=f"บอสจะเกิดใน {miniboss.spawn_time[0]} - {miniboss.spawn_time[1]} ชั่วโมงหลังจากตาย",
+            color=discord.Color.blue()
+        )
+        embed.set_image(url=miniboss.image)  # แนบภาพบอส
+        await interaction.response.send_message(embed=embed)
+    else:
+        await interaction.response.send_message("ไม่พบข้อมูลบอสที่เลือก.")
+
 # Start the bot and the server concurrently
 if __name__ == "__main__":
     flask_thread = Thread(target=server_on)
