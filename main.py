@@ -31,7 +31,7 @@ async def on_ready():
     
     # เริ่มการแจ้งเตือนทุกวันศุกร์
     noti_c3.friday_reminder.start(bot)
-
+    noti_c3.saturday_reminder.start(bot)
 # เรียกใช้งานฟังก์ชัน on_member_join จาก new_member.py
 @bot.event
 async def on_member_join(member):
