@@ -64,13 +64,6 @@ async def on_message(message):
                 else:
                     percentage_change = 0
 
-                # change_direction = "เพิ่มขึ้น" if difference > 0 else "ลดลง" if difference < 0 else "ไม่เปลี่ยนแปลง"
-                # percentage_sign = "+" if difference > 0 else "-" if difference < 0 else ""       
-                # embed.add_field(
-                #     name="การเปลี่ยนแปลง",
-                #     value=f"{change_direction} **{abs(difference)}** ({percentage_sign}{abs(percentage_change):.2f}%)",
-                #     inline=False
-                # )
                 if difference > 0:
                     change_direction = "เพิ่มขึ้น"
                     emoji = "📈"
@@ -87,13 +80,13 @@ async def on_message(message):
                     color = discord.Color.gold()
                     sign = ""
                 embed = discord.Embed(
-                    title=f"{emoji} การบันทึกข้อมูลสำเร็จ!",
+                    title=f"บันทึกข้อมูลสำเร็จ!",
                     description=f"ข้อมูลของคุณ **{username}** ได้ถูกบันทึกแล้ว: **{number}**",
                     color=color
                 )
                 embed.add_field(
-                    name=f"{emoji} การเปลี่ยนแปลง:",
-                    value=f"**{change_direction}**\n{emoji} **{abs(difference)} หน่วย** ({sign}{abs(percentage_change):.2f}%)",
+                    name=f"การเปลี่ยนแปลง: **{change_direction}** {emoji}",
+                    value=f"**{abs(difference)} หน่วย** ({sign}{abs(percentage_change):.2f}%)",
                     inline=False
                 )
 
@@ -109,7 +102,7 @@ async def on_message(message):
                     value=f"**{discord.utils.format_dt(discord.utils.utcnow(), 'T')}**",  # แสดงเวลาปัจจุบัน
                     inline=True
                 )
-                embed.set_footer(text="ระบบบันทึกข้อมูล GR | ขอบคุณที่ใช้งาน!", icon_url="https://i.imgur.com/3ZUrjUP.png")
+                embed.set_footer(text="SweetDessert GR | ขอบคุณที่ใช้งาน!", icon_url="https://i.imgur.com/ZdfJpK4.png")
                 await message.channel.send(embed=embed)
         else:
             await message.channel.send("เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาแจ้งบอสฟร้อง.")
