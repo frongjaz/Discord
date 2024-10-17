@@ -8,6 +8,7 @@ from myserver import server_on  # Assuming this starts your server
 from Component import new_member
 from Component import noti_c3  
 from Component import rank  
+from Component import miniboss
 
 intents = discord.Intents.default()
 intents.guilds = True
@@ -146,6 +147,14 @@ def get_previous_value(username):
         return data.get('GR_value')  # ค่าที่เก่าจะต้องอยู่ในฟิลด์นี้
     return None
 
+@bot.command(name='miniboss')
+async def create_miniboss(ctx, boss_name: str, death_time: str):
+    for boss in miniboss.minibosses:
+        if boss.name == boss_name:
+            await boss.spawn(death_time, ctx)
+            return
+    
+    await ctx.send("ไม่พบชื่อบอสที่กรอก กรุณาลองใหม่อีกครั้ง.")
 
 @bot.tree.command(name='rank', description='แสดง rank ของคนมี HSOA')
 async def rankcommand(interaction):
