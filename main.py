@@ -141,11 +141,11 @@ async def on_message(message):
         rank.user_numbers = []
         await message.channel.send("Clear เรียบร้อย!")
     
-    if message.content.lower().startswith('!miniboss'):
+    if message.content.startswith('!miniboss'):
         parts = message.content.split()
         if len(parts) >= 3:
             boss_name = parts[1] 
-            death_time = parts[2]  # สมมติว่าเวลาตายอยู่ที่ index 2
+            death_time = parts[2] 
             await create_miniboss(message.channel, boss_name, death_time)
         else:
             await message.channel.send("กรุณาใส่ชื่อบอสและเวลาที่ตาย เช่น !miniboss <ชื่อบอส> <เวลาตาย>")
@@ -160,13 +160,13 @@ def get_previous_value(username):
         return data.get('GR_value')  # ค่าที่เก่าจะต้องอยู่ในฟิลด์นี้
     return None
 
-@bot.command(name='miniboss')
-async def create_miniboss(ctx, boss_name: str, death_time: str):
-    for boss in miniboss.minibosses:
-        if boss.name.lower() == boss_name.lower():  # ตรวจสอบชื่อบอสให้ตรง
-            await boss.spawn(death_time, ctx)
-            return
-    await ctx.send("ไม่พบชื่อบอสที่กรอก กรุณาลองใหม่อีกครั้ง.")
+async def create_miniboss(channel, boss_name, death_time):
+    miniboss_found = next((boss for boss in miniboss.minibosses if boss.name.lower() == boss_name.lower()), None)
+    if miniboss_found:
+        await miniboss_found.spawn(death_time, channel)
+    else:
+        await channel.send("ไม่พบชื่อบอสที่กรอก กรุณาลองใหม่อีกครั้ง.")
+
 
 
 @bot.tree.command(name='rank', description='แสดง rank ของคนมี HSOA')
@@ -175,17 +175,15 @@ async def rankcommand(interaction):
 
 @bot.tree.command(name='boss_info', description='แสดงข้อมูลบอสที่เลือก')
 async def boss_info(interaction: discord.Interaction, boss_name: str):
-    # ค้นหาบอสในรายชื่อ minibosses
     miniboss = next((b for b in miniboss.minibosses if b.name == boss_name), None)
-    
+
     if miniboss:
-        # สร้าง Embed สำหรับแสดงข้อมูล
         embed = discord.Embed(
             title=f"ข้อมูลบอส: {miniboss.name}",
             description=f"บอสจะเกิดใน {miniboss.spawn_time[0]} - {miniboss.spawn_time[1]} ชั่วโมงหลังจากตาย",
             color=discord.Color.blue()
         )
-        embed.set_image(url=miniboss.image)  # แนบภาพบอส
+        embed.set_image(url=miniboss.image)
         await interaction.response.send_message(embed=embed)
     else:
         await interaction.response.send_message("ไม่พบข้อมูลบอสที่เลือก.")
