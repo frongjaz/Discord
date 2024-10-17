@@ -3,7 +3,7 @@ from datetime import datetime, time
 import discord
 from datetime import time, datetime
 from discord.ext import tasks
-from rank import rank_numbers, user_numbers  # Import ฟังก์ชัน rank_numbers และ user_numbers
+from Component.rank import rank_numbers, user_numbers
 
 target_channel_id = 1290924217184948236  # ID ของช่องที่ต้องการส่งข้อความแจ้งเตือน
 guild_wallet_id = 811207505631510538  # ID ของกระเป๋าที่จะส่งไป

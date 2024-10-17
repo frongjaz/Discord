@@ -5,8 +5,8 @@ from discord.ext import commands
 from threading import Thread
 from myserver import server_on  # Assuming this starts your server
 from Component import new_member
-from Component import noti_c3  # Import ฟังก์ชันแจ้งเตือนจาก noti_c3.py
-from Component import rank  # Import ฟังก์ชัน rank จาก rank.py
+from Component import noti_c3  
+from Component import rank  
 
 intents = discord.Intents.default()
 intents.guilds = True
