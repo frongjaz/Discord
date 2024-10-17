@@ -21,7 +21,6 @@ target_channel_id = 1290924217184948236
 GR_channel_id = 1242868461982580807
 SweetDessert_role = 1218124815378940035
 url = 'https://script.google.com/macros/s/AKfycbxdlxls3pHHab_b_fGVdBjGUNsczUGiOKrdd3STi-BFudmRZHLrfaARResrkuUPs_Tn1w/exec'
-
 # เมื่อบอทพร้อมทำงาน
 @bot.event
 async def on_ready():
@@ -47,9 +46,8 @@ async def on_message(message):
         return
 
     if message.channel.id == GR_channel_id and message.content.isdigit():
-        number = int(message.content.replace(',', ''))  # ลบคอมม่า
+        number = int(message.content) 
         username = message.author.display_name
-        # ดึงค่าที่เก่าจาก Google Sheets
         previous_value = get_previous_value(username)
 
         # ส่งข้อมูลไปยัง Google Sheets
