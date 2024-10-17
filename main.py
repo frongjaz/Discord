@@ -56,7 +56,11 @@ async def on_message(message):
         response = requests.post(url, json={'name': username, 'GR_value': number})
 
         if response.status_code == 200:
-            await message.channel.send(f"{username} GR : {number}")
+            embed = discord.Embed(
+                title="ข้อมูลของคุณได้รับการบันทึก",
+                description=f"{username} GR: **{number}**",
+                color=discord.Color.green() 
+            )
 
             if previous_value is not None:
                 difference = number - previous_value
@@ -66,10 +70,13 @@ async def on_message(message):
                     percentage_change = 0
 
                 change_direction = "เพิ่มขึ้น" if difference > 0 else "ลดลง" if difference < 0 else "ไม่เปลี่ยนแปลง"
-                percentage_sign = "+" if difference > 0 else "-" if difference < 0 else ""                
-                await message.channel.send(
-                     f"การเปลี่ยนแปลง: {change_direction} {abs(difference)} ({percentage_sign}{abs(percentage_change):.2f}%)"
-                )
+                percentage_sign = "+" if difference > 0 else "-" if difference < 0 else ""       
+                embed.add_field(
+                    name="การเปลี่ยนแปลง",
+                    value=f"{change_direction} **{abs(difference)}** ({percentage_sign}{abs(percentage_change):.2f}%)",
+                    inline=False
+                )         
+                await message.channel.send(embed=embed)
         else:
             await message.channel.send("เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาแจ้งบอสฟร้อง.")
 
