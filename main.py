@@ -20,7 +20,8 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 target_channel_id = 1290924217184948236
 GR_channel_id = 1242868461982580807
 SweetDessert_role = 1218124815378940035
-url = 'https://script.google.com/macros/s/AKfycbxdlxls3pHHab_b_fGVdBjGUNsczUGiOKrdd3STi-BFudmRZHLrfaARResrkuUPs_Tn1w/exec'
+url = 'https://script.google.com/macros/s/AKfycbxdlxls3pHHab_b_fGVdBjGUNsczUGiOKrdd3STi-BFudmRZHLrfaARResrkuUPs_Tn1w/exec?'
+
 # เมื่อบอทพร้อมทำงาน
 @bot.event
 async def on_ready():
@@ -68,7 +69,8 @@ async def on_message(message):
                     f"การเปลี่ยนแปลง: {change_direction} {abs(difference)} หน่วย ({abs(percentage_change):.2f}%)"
                 )
         else:
-            await message.channel.send("เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาแจ้งบอสฟร้อง.")
+             print(f"Error {response.status_code}: {response.text}")  # เพิ่มการพิมพ์ข้อผิดพลาด
+             await message.channel.send("เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาแจ้งบอสฟร้อง.")
 
     if message.channel.id == target_channel_id and message.content.isdigit():
         number = int(message.content)
