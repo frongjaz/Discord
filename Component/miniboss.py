@@ -21,10 +21,10 @@ class MiniBoss:
 
 # สร้างรายชื่อบอส
 minibosses = [
-    MiniBoss("อังโกลท์", (3.5, 6.5), "วงดำ", 'miniboos1.jpg'),
-    MiniBoss("คิอารอน", (4.5, 7.5), "วงแดง", 'miniboos1.jpg'),
-    MiniBoss("กริซ", (5.5, 8.5), "วงฟ้า", 'miniboos1.jpg'),
-    MiniBoss("อินเฟรโน", (6.5, 9.5), "วงเขียว", 'miniboos1.jpg'),
+    MiniBoss("อังโกลท์", (3.5, 6.5), "วงดำ", 'miniboss1.jpg'),
+    MiniBoss("คิอารอน", (4.5, 7.5), "วงแดง", 'miniboss1.jpg'),
+    MiniBoss("กริซ", (5.5, 8.5), "วงฟ้า", 'miniboss1.jpg'),
+    MiniBoss("อินเฟรโน", (6.5, 9.5), "วงเขียว", 'miniboss1.jpg'),
 ]
 
 async def create_miniboss(ctx, name, death_time):

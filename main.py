@@ -149,6 +149,7 @@ def get_previous_value(username):
 
 @bot.command(name='miniboss')
 async def create_miniboss(ctx, boss_name: str, death_time: str):
+    print(f"{boss_name} ตายตอน {death_time}")  # เพิ่มการพิมพ์ดีบัก
     for boss in miniboss.minibosses:
         if boss.name == boss_name:
             await boss.spawn(death_time, ctx)
