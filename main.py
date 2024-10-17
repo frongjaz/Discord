@@ -66,8 +66,9 @@ async def on_message(message):
                     percentage_change = 0
 
                 change_direction = "เพิ่มขึ้น" if difference > 0 else "ลดลง" if difference < 0 else "ไม่เปลี่ยนแปลง"
+                percentage_sign = "+" if difference > 0 else "-" if difference < 0 else ""                
                 await message.channel.send(
-                    f"การเปลี่ยนแปลง: {change_direction} {abs(difference)} ({abs(percentage_change):.2f}%)"
+                     f"การเปลี่ยนแปลง: {change_direction} {abs(difference)} ({percentage_sign}{abs(percentage_change):.2f}%)"
                 )
         else:
             await message.channel.send("เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาแจ้งบอสฟร้อง.")
