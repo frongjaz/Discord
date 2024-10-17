@@ -1,8 +1,10 @@
 import discord
 from datetime import datetime, timedelta
 import random
+import asyncio
 
 class Miniboss:
+    CHANNEL_ID = 1238088155668807735
     def __init__(self, name, spawn_time_range, color, image_url=None):
         self.name = name  # ชื่อบอส
         self.spawn_time_range = spawn_time_range  # ช่วงเวลาที่บอสจะเกิดใหม่ เช่น (3.5, 6.5) ชั่วโมง
@@ -28,7 +30,16 @@ class Miniboss:
             max_spawn_time = self.death_time + timedelta(hours=self.spawn_time_range[1])
             return (min_spawn_time, max_spawn_time)
         return None
-
+    async def check_spawn_time(self):
+        channel = self.bot.get_channel(CHANNEL_ID)  # ดึงช่องจาก ID
+        while True:
+            await asyncio.sleep(60)  # ตรวจสอบทุกๆ 60 วินาที
+            current_time = datetime.now()
+            spawn_time = self.calculate_spawn_time()
+            
+            if spawn_time and spawn_time[0] <= current_time <= spawn_time[1]:
+                await channel.send(f"🎉 บอส **{self.name}** เกิดแล้ว! 🎉")
+                break
     async def spawn(self, death_time_str, channel):
         """เรียกใช้เมื่อบอสตาย และแจ้งให้ผู้ใช้ทราบ"""
         if self.set_death_time(death_time_str):
