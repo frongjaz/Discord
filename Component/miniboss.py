@@ -86,11 +86,19 @@ class Miniboss:
         """เรียกใช้เมื่อบอสตาย และแจ้งให้ผู้ใช้ทราบ"""
         if self.set_death_time(death_time_str):
             spawn_times = self.calculate_spawn_time()
-            if not spawn_times:
-                await channel.send("ไม่สามารถคำนวณช่วงเวลาที่บอสจะเกิดได้.")
-                return
-            
-            spawn_location_description = self.get_spawn_location_description()
+            # เปลี่ยนให้จุดเกิดแสดงเป็นข้อความแทนการใช้รหัสสี
+            spawn_location_description = ""
+            if self.color == "#000000":
+                spawn_location_description = "วงสีดำ"
+            elif self.color == "#FF0000":
+                spawn_location_description = "วงสีแดง"
+            elif self.color == "#0000FF":
+                spawn_location_description = "วงสีฟ้า"
+            elif self.color == "#00FF00":
+                spawn_location_description = "วงสีเขียว"
+            else:
+                spawn_location_description = "จุดเกิดไม่ทราบ"
+
             embed = discord.Embed(
                 title=f"🦹‍♂️ บอส {self.name} ตายแล้ว",
                 description=(
@@ -98,47 +106,14 @@ class Miniboss:
                     f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_times[0].strftime('%H:%M')} - {spawn_times[1].strftime('%H:%M')}**.\n"
                     f"{spawn_location_description}"
                 ),
-                color=discord.Color.from_str(self.color)  
+                color=discord.Color.from_str(self.color)
             )
             if self.image:
                 embed.set_image(url=self.image)
             await channel.send(embed=embed)
+            
+            # สร้าง task สำหรับแต่ละบอสแยกกัน
+            asyncio.create_task(self.check_spawn_time(channel))
 
-            await self.check_spawn_time(channel)
         else:
             await channel.send("รูปแบบเวลาไม่ถูกต้อง กรุณาใช้รูปแบบ HH:MM")
-
-            """เรียกใช้เมื่อบอสตาย และแจ้งให้ผู้ใช้ทราบ"""
-            if self.set_death_time(death_time_str):
-                spawn_times = self.calculate_spawn_time()
-                spawn_location_description = ""
-                if self.color == "#000000":
-                    spawn_location_description = "วงสีดำ"
-                elif self.color == "#FF0000":
-                    spawn_location_description = "วงสีแดง"
-                elif self.color == "#0000FF":
-                    spawn_location_description = "วงสีฟ้า"
-                elif self.color == "#00FF00":
-                    spawn_location_description = "วงสีเขียว"
-                else:
-                    spawn_location_description = "จุดเกิดไม่ทราบ"
-                
-                embed = discord.Embed(
-                    title=f"🦹‍♂️ บอส {self.name} ตายแล้ว",
-                    description=(
-                        f"🕒 บอส {self.name} ตายเมื่อเวลา **{death_time_str}**.\n"
-                        f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_times[0].strftime('%H:%M')} - {spawn_times[1].strftime('%H:%M')}**.\n"
-                        f"{spawn_location_description}"
-                    ),
-                    color=discord.Color.from_str(self.color)  
-                )
-                if self.image:
-                    embed.set_image(url=self.image)
-                await channel.send(embed=embed)
-                
-                # เริ่มเช็คเวลาเกิดบอสในช่องที่กำหนด
-                await self.check_spawn_time(channel)
-
-            else:
-                await channel.send("รูปแบบเวลาไม่ถูกต้อง กรุณาใช้รูปแบบ HH:MM")
-

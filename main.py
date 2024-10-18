@@ -58,13 +58,11 @@ async def on_message(message):
 
     for boss_name in boss_names:
         if boss_name in message.content:
-
             parts = message.content.split()
             if len(parts) >= 2 and parts[0] == boss_name:
                 death_time = parts[1]  
                 await create_miniboss(message.channel, boss_name, death_time)
-                return 
-            
+     
     await bot.process_commands(message)
     if message.channel.id == GR_channel_id and message.content.isdigit():
         number = int(message.content.replace(',', ''))  # ลบคอมม่า
@@ -177,9 +175,9 @@ async def create_miniboss(channel, boss_name, death_time):
     else:
         await channel.send("ไม่พบชื่อบอสที่กรอก กรุณาลองใหม่อีกครั้ง.")
 
+
 @bot.command(name='บอส')
 async def miniboss_list(ctx):
-    # สร้าง Embed สำหรับแสดงข้อมูล
     embed = discord.Embed(
         title="📜 รายชื่อบอสและระยะเวลาการเกิด",
         description="นี่คือรายชื่อบอสทั้งหมดที่มีในระบบ:",
