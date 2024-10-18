@@ -78,13 +78,10 @@ class Miniboss:
         else:
             await channel.send("รูปแบบเวลาไม่ถูกต้อง กรุณาใช้รูปแบบ HH:MM")
 
-# ตัวอย่างการสร้างอ็อบเจ็กต์ของบอส
-url = "https://scontent.fbkk29-4.fna.fbcdn.net/v/t39.30808-6/463103563_122106380414560606_7643064554048604016_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=k4plQ7Ge2JYQ7kNvgE2RCRr&_nc_zt=23&_nc_ht=scontent.fbkk29-4.fna&_nc_gid=AkaTEo2eD5El_nEMeaWcc4e&oh=00_AYC7KNk25yQO0Gf02tQRapY6I3WFDoOixryPxwMuhC8ZCg&oe=67168F99"
-
 # รายการบอสขนาดเล็ก
 minibosses = [
-    Miniboss("อังโกลท์", (3.5, 6.5), "#000000", url),  # วงดำ
-    Miniboss("คิอารอน", (4.5, 7.5), "#FF0000", url),  # วงแดง
-    Miniboss("กริซ", (5.5, 8.5), "#0000FF", url),  # วงฟ้า
-    Miniboss("อินเฟรโน", (6.5, 9.5), "#00FF00", url),  # วงเขียว
+    Miniboss("อังโกลท์", (3.5, 6.5), "#000000", "https://img2.pic.in.th/pic/baf275d47676440180d1717c8c2198c4.png"),  # วงดำ
+    Miniboss("คิอารอน", (4.5, 7.5), "#FF0000", "https://img2.pic.in.th/pic/f5af6ac6a95ac458c9ce84009e113e40.png"),  # วงแดง
+    Miniboss("กริซ", (5.5, 8.5), "#0000FF", "https://img5.pic.in.th/file/secure-sv1/fedd60ce9d12fa6e087066cb11d08615.png"),  # วงฟ้า
+    Miniboss("อินเฟรโน", (6.5, 9.5), "#00FF00", "https://img5.pic.in.th/file/secure-sv1/50b2d485c60420674a6962f1da60311a.png"),  # วงเขียว
 ]
