@@ -5,7 +5,8 @@ import asyncio
 import pytz 
 
 TZ_THAILAND = pytz.timezone('Asia/Bangkok')
-
+SweetDessert_role = 1218124815378940035
+mention_role = f"<@&{SweetDessert_role}>"
 class Miniboss:
     def __init__(self, bot, name, spawn_time_range, color, image_url=None):
         self.bot = bot  # เพิ่ม bot ที่ส่งเข้ามา
@@ -40,20 +41,35 @@ class Miniboss:
         while True:
             await asyncio.sleep(60)
             current_time = datetime.now(TZ_THAILAND)
-            print(f"Current time: {current_time.strftime('%H:%M')}")  # Debugging line
+            print(f"Current time: {current_time.strftime('%H:%M')}")  
             spawn_time = self.calculate_spawn_time()
-            print(f"Spawn times: {spawn_time}")  # Debugging line
+            print(f"Spawn times: {spawn_time}")  
             
             if spawn_time and spawn_time[0] <= current_time <= spawn_time[1]:
+                spawn_location_description = ""
+                if self.color == "#000000":
+                    spawn_location_description = "ที่วงสีดำ"
+                elif self.color == "#FF0000":
+                    spawn_location_description = "ที่วงสีแดง"
+                elif self.color == "#0000FF":
+                    spawn_location_description = "ที่วงสีฟ้า"
+                elif self.color == "#00FF00":
+                    spawn_location_description = "ที่วงสีเขียว"
+                else:
+                    spawn_location_description = "ที่วงสีอื่น"
+
+
                 embed = discord.Embed(
-                    title=f"🎉 บอส {self.name} เกิดแล้ว! 🎉",
-                    description=f"บอส {self.name} ได้เกิดใหม่ในขณะนี้ที่ {current_time.strftime('%H:%M')}",
+                    title=f" {mention_role} บอส {self.name} เกิดแล้ว! 🎉",
+                    description=(f"บอส {self.name} ได้เกิดใหม่ในขณะนี้ที่ {spawn_location_description}.\n"
+                                f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_time[0].strftime('%H:%M')} - {spawn_time[1].strftime('%H:%M')}**."),
                     color=discord.Color.from_str(self.color)
                 )
                 if self.image:
                     embed.set_image(url=self.image)
                 await channel.send(embed=embed)
                 break
+
 
 
 
