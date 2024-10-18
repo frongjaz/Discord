@@ -38,9 +38,11 @@ class Miniboss:
     async def check_spawn_time(self, channel):
         """ตรวจสอบเวลาที่บอสจะเกิด"""
         while True:
-            await asyncio.sleep(60) 
-            current_time = datetime.now(TZ_THAILAND) 
+            await asyncio.sleep(60)
+            current_time = datetime.now(TZ_THAILAND)
+            print(f"Current time: {current_time.strftime('%H:%M')}")  # Debugging line
             spawn_time = self.calculate_spawn_time()
+            print(f"Spawn times: {spawn_time}")  # Debugging line
             
             if spawn_time and spawn_time[0] <= current_time <= spawn_time[1]:
                 embed = discord.Embed(
@@ -52,6 +54,7 @@ class Miniboss:
                     embed.set_image(url=self.image)
                 await channel.send(embed=embed)
                 break
+
 
 
 
