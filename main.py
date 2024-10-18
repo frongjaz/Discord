@@ -53,7 +53,19 @@ async def on_member_join(member):
 async def on_message(message):
     if message.author.bot:
         return
+    
+    boss_names = [boss.name for boss in minibosses]
 
+    for boss_name in boss_names:
+        if boss_name in message.content:
+
+            parts = message.content.split()
+            if len(parts) >= 2 and parts[0] == boss_name:
+                death_time = parts[1]  
+                await create_miniboss(message.channel, boss_name, death_time)
+                return 
+            
+    await bot.process_commands(message)
     if message.channel.id == GR_channel_id and message.content.isdigit():
         number = int(message.content.replace(',', ''))  # ลบคอมม่า
         username = message.author.display_name
@@ -156,8 +168,8 @@ async def on_message(message):
             await create_miniboss(message.channel, boss_name, death_time)
         else:
             await message.channel.send("กรุณาใส่ชื่อบอสและเวลาที่ตาย เช่น !มินิ <ชื่อบอส> <เวลาตาย>")
-    else:
-        await bot.process_commands(message)
+
+    await bot.process_commands(message)
 
 def get_previous_value(username):
     # ฟังก์ชันนี้จะต้องไปดึงค่าจาก Google Sheets เพื่อหาค่าที่เก่าก่อนหน้านี้
