@@ -160,15 +160,6 @@ async def on_message(message):
         rank.user_numbers = []
         await message.channel.send("Clear เรียบร้อย!")
     
-    if message.content.startswith('!มินิ'):
-        parts = message.content.split()
-        if len(parts) >= 3:
-            boss_name = parts[1] 
-            death_time = parts[2] 
-            await create_miniboss(message.channel, boss_name, death_time)
-        else:
-            await message.channel.send("กรุณาใส่ชื่อบอสและเวลาที่ตาย เช่น !มินิ <ชื่อบอส> <เวลาตาย>")
-
     await bot.process_commands(message)
 
 def get_previous_value(username):
@@ -196,7 +187,7 @@ async def miniboss_list(ctx):
     )
 
     # วนลูปเพื่อสร้างข้อมูลบอส
-    for boss in miniboss.minibosses:
+    for boss in minibosses:
         spawn_time_range = f"⏰ {boss.spawn_time_range[0]} - {boss.spawn_time_range[1]} ชั่วโมง"
         embed.add_field(name=f"🦹‍♂️ {boss.name}", value=spawn_time_range, inline=False)
 

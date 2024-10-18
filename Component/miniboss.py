@@ -2,6 +2,9 @@ import discord
 from datetime import datetime, timedelta
 import random
 import asyncio
+import pytz 
+
+TZ_THAILAND = pytz.timezone('Asia/Bangkok')
 
 class Miniboss:
     def __init__(self, bot, name, spawn_time_range, color, image_url=None):
@@ -15,9 +18,10 @@ class Miniboss:
     def set_death_time(self, death_time_str):
         """ตั้งเวลาเมื่อตาย โดยรับค่าเวลาตายในรูปแบบ string 'HH:MM'"""
         try:
-            now = datetime.now()
+            now = datetime.now(TZ_THAILAND)  
             death_time = datetime.strptime(death_time_str, '%H:%M').replace(
                 year=now.year, month=now.month, day=now.day)
+            death_time = TZ_THAILAND.localize(death_time)  
             self.death_time = death_time
             return True
         except ValueError:
@@ -34,8 +38,8 @@ class Miniboss:
     async def check_spawn_time(self, channel):
         """ตรวจสอบเวลาที่บอสจะเกิด"""
         while True:
-            await asyncio.sleep(60)  # ตรวจสอบทุกๆ 60 วินาที
-            current_time = datetime.now()
+            await asyncio.sleep(60) 
+            current_time = datetime.now(TZ_THAILAND) 
             spawn_time = self.calculate_spawn_time()
             
             if spawn_time and spawn_time[0] <= current_time <= spawn_time[1]:
