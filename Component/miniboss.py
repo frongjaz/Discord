@@ -7,6 +7,7 @@ import pytz
 TZ_THAILAND = pytz.timezone('Asia/Bangkok')
 SweetDessert_role = 1218124815378940035
 mention_role = f"<@&{SweetDessert_role}>"
+
 class Miniboss:
     def __init__(self, bot, name, spawn_time_range, color, image_url=None):
         self.bot = bot  # เพิ่ม bot ที่ส่งเข้ามา
@@ -58,9 +59,10 @@ class Miniboss:
                 else:
                     spawn_location_description = "ที่วงสีอื่น"
 
+                await channel.send(f"{mention_role}")
 
                 embed = discord.Embed(
-                    title=f" {mention_role} บอส {self.name} เกิดแล้ว! 🎉",
+                    title=f"บอส {self.name} เกิดแล้ว! 🎉",
                     description=(f"บอส {self.name} ได้เกิดใหม่ในขณะนี้ที่ {spawn_location_description}.\n"
                                 f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_time[0].strftime('%H:%M')} - {spawn_time[1].strftime('%H:%M')}**."),
                     color=discord.Color.from_str(self.color)
