@@ -168,7 +168,7 @@ def get_previous_value(username):
     return None
 
 async def create_miniboss(channel, boss_name, death_time):
-    miniboss_found = next((boss for boss in miniboss.minibosses if boss.name.lower() == boss_name.lower()), None)
+    miniboss_found = next((boss for boss in minibosses if boss.name.lower() == boss_name.lower()), None)
     if miniboss_found:
         await miniboss_found.spawn(death_time, channel)
     else:
