@@ -62,7 +62,7 @@ class Miniboss:
             if spawn_time:
                 print(f"Spawn time calculated: {spawn_time[0]} - {spawn_time[1]}")
                 if spawn_time[0] <= current_time <= spawn_time[1]:
-                    # ทำงานเมื่อถึงเวลาบอสเกิด
+                    await channel.send(f"{mention_role}!") 
                     spawn_location_description = self.get_spawn_location_description()
                     
                     embed = discord.Embed(
@@ -91,7 +91,6 @@ class Miniboss:
                 return
             
             spawn_location_description = self.get_spawn_location_description()
-
             embed = discord.Embed(
                 title=f"🦹‍♂️ บอส {self.name} ตายแล้ว",
                 description=(
@@ -105,7 +104,6 @@ class Miniboss:
                 embed.set_image(url=self.image)
             await channel.send(embed=embed)
 
-            # เริ่มเช็คเวลาเกิดบอสในช่องที่กำหนด
             await self.check_spawn_time(channel)
         else:
             await channel.send("รูปแบบเวลาไม่ถูกต้อง กรุณาใช้รูปแบบ HH:MM")
@@ -113,7 +111,6 @@ class Miniboss:
             """เรียกใช้เมื่อบอสตาย และแจ้งให้ผู้ใช้ทราบ"""
             if self.set_death_time(death_time_str):
                 spawn_times = self.calculate_spawn_time()
-                # เปลี่ยนให้จุดเกิดแสดงเป็นข้อความแทนการใช้รหัสสี
                 spawn_location_description = ""
                 if self.color == "#000000":
                     spawn_location_description = "วงสีดำ"
@@ -125,7 +122,7 @@ class Miniboss:
                     spawn_location_description = "วงสีเขียว"
                 else:
                     spawn_location_description = "จุดเกิดไม่ทราบ"
-
+                
                 embed = discord.Embed(
                     title=f"🦹‍♂️ บอส {self.name} ตายแล้ว",
                     description=(
