@@ -66,7 +66,7 @@ class Miniboss:
                     spawn_location_description = self.get_spawn_location_description()
                     
                     embed = discord.Embed(
-                        title=f" {mention_role} บอส {self.name} เกิดแล้ว! 🎉",
+                        title=f"บอส {self.name} เกิดแล้ว! 🎉",
                         description=(f"บอส {self.name} ได้เกิดใหม่ในขณะนี้ที่ {spawn_location_description}.\n"
                                     f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_time[0].strftime('%H:%M')} - {spawn_time[1].strftime('%H:%M')}**."),
                         color=discord.Color.from_str(self.color)
