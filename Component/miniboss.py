@@ -39,8 +39,17 @@ class Miniboss:
             spawn_time = self.calculate_spawn_time()
             
             if spawn_time and spawn_time[0] <= current_time <= spawn_time[1]:
-                await channel.send(f"🎉 บอส **{self.name}** เกิดแล้ว! 🎉")
+                embed = discord.Embed(
+                    title=f"🎉 บอส {self.name} เกิดแล้ว! 🎉",
+                    description=f"บอส {self.name} ได้เกิดใหม่ในขณะนี้ที่ {current_time.strftime('%H:%M')}",
+                    color=discord.Color.from_str(self.color)
+                )
+                if self.image:
+                    embed.set_image(url=self.image)
+                await channel.send(embed=embed)
                 break
+
+
 
     async def spawn(self, death_time_str, channel):
         """เรียกใช้เมื่อบอสตาย และแจ้งให้ผู้ใช้ทราบ"""
@@ -78,10 +87,4 @@ class Miniboss:
         else:
             await channel.send("รูปแบบเวลาไม่ถูกต้อง กรุณาใช้รูปแบบ HH:MM")
 
-# รายการบอสขนาดเล็ก
-minibosses = [
-    Miniboss("อังโกลท์", (3.5, 6.5), "#000000", "https://img2.pic.in.th/pic/baf275d47676440180d1717c8c2198c4.png"),  # วงดำ
-    Miniboss("คิอารอน", (4.5, 7.5), "#FF0000", "https://img2.pic.in.th/pic/f5af6ac6a95ac458c9ce84009e113e40.png"),  # วงแดง
-    Miniboss("กริซ", (5.5, 8.5), "#0000FF", "https://img5.pic.in.th/file/secure-sv1/fedd60ce9d12fa6e087066cb11d08615.png"),  # วงฟ้า
-    Miniboss("อินเฟรโน", (6.5, 9.5), "#00FF00", "https://img5.pic.in.th/file/secure-sv1/50b2d485c60420674a6962f1da60311a.png"),  # วงเขียว
-]
+

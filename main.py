@@ -23,6 +23,13 @@ GR_channel_id = 1242868461982580807
 SweetDessert_role = 1218124815378940035
 url = 'https://script.google.com/macros/s/AKfycbxdlxls3pHHab_b_fGVdBjGUNsczUGiOKrdd3STi-BFudmRZHLrfaARResrkuUPs_Tn1w/exec'
 
+minibosses = [
+    miniboss.Miniboss(bot, "อังโกลท์", (3.5, 6.5), "#000000", "https://img2.pic.in.th/pic/baf275d47676440180d1717c8c2198c4.png"),
+    miniboss.Miniboss(bot, "คิอารอน", (4.5, 7.5), "#FF0000", "https://img2.pic.in.th/pic/f5af6ac6a95ac458c9ce84009e113e40.png"),
+    miniboss.Miniboss(bot, "กริซ", (5.5, 8.5), "#0000FF", "https://img5.pic.in.th/file/secure-sv1/fedd60ce9d12fa6e087066cb11d08615.png"),
+    miniboss.Miniboss(bot, "อินเฟรโน", (6.5, 9.5), "#00FF00", "https://img5.pic.in.th/file/secure-sv1/50b2d485c60420674a6962f1da60311a.png"),
+]
+
 # เมื่อบอทพร้อมทำงาน
 @bot.event
 async def on_ready():
@@ -199,7 +206,7 @@ async def boss_info(interaction: discord.Interaction, boss_name: str):
     if miniboss:
         embed = discord.Embed(
             title=f"ข้อมูลบอส: {miniboss.name}",
-            description=f"บอสจะเกิดใน {miniboss.spawn_time[0]} - {miniboss.spawn_time[1]} ชั่วโมงหลังจากตาย",
+            description=f"บอสจะเกิดใน {miniboss.spawn_time_range[0]} - {miniboss.spawn_time_range[1]} ชั่วโมงหลังจากตาย",
             color=discord.Color.blue()
         )
         embed.set_image(url=miniboss.image)
