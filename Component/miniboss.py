@@ -58,7 +58,7 @@ class Miniboss:
 
                 if spawn_time[0] <= current_time <= spawn_time[1]:
                     spawn_location_description = self.get_spawn_location()
-                    await channel.send(f"{mention_role} บอส {self.name} เกิดแล้วที่ {spawn_location_description} {location}!") 
+                    await channel.send(f"{mention_role} บอส {self.name} เกิดแล้ว {spawn_location_description} {location}!") 
                     embed = discord.Embed(
                         title=f"บอส {self.name} เกิดแล้ว {location}! 🎉",
                         description=(f"บอส {self.name} ได้เกิดใหม่ที่ {spawn_location_description} {location}.\n"
@@ -75,29 +75,28 @@ class Miniboss:
         """เพิ่มเวลาตายใหม่ และเริ่มเช็คเวลาที่บอสจะเกิด"""
         input_parts = input_str.split()  # แยกข้อความที่กรอกมา
         death_time_str = input_parts[0]
-        location = ' '.join(input_parts[1:]) if len(input_parts) > 1 else ""  # ถ้ามี location ให้เก็บไว้
-        
+        location = ' '.join(input_parts[1:]) if len(input_parts) > 1 else ""  # ดึงค่าตำแหน่งจาก input
+
         if self.add_death_time(death_time_str):
-            self.instances.append((self.death_time, location))  # เพิ่ม instance ใหม่ถ้าไม่มี
+            self.instances[-1] = (self.instances[-1][0], location)  # อัพเดตสถานที่ใน instance ล่าสุด
             death_time, _ = self.instances[-1]  # เวลาตายล่าสุด
             spawn_times = self.calculate_spawn_time(death_time)
             spawn_location_description = self.get_spawn_location()
-            
+
+            # สร้าง embed
             embed = discord.Embed(
-                title=f"🦹‍♂️ บอส {self.name} ตายแล้ว {location}",
+                title=f"🦹‍♂️ บอส {self.name} ตายแล้ว {location}",  # เพิ่ม location ใน title
                 description=(
                     f"🕒 บอส {self.name} ตายเมื่อเวลา **{death_time_str}**.\n"
                     f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_times[0].strftime('%H:%M')} - {spawn_times[1].strftime('%H:%M')}**.\n"
-                    f"โดยเกิดที่ {spawn_location_description} {location}"
+                    f"โดยเกิดที่ {spawn_location_description} {location}"  # เพิ่ม location ใน description
                 ),
                 color=discord.Color.from_str(self.color)
             )
-
             if self.image:
                 embed.set_image(url=self.image)
             await channel.send(embed=embed)
 
-            # เริ่มเช็คเวลาเกิดบอสในช่องที่กำหนด
             await self.check_spawn_time(channel)
         else:
             await channel.send("รูปแบบเวลาไม่ถูกต้อง กรุณาใช้รูปแบบ HH:MM")
