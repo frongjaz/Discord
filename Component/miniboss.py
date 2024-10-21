@@ -76,14 +76,19 @@ class Miniboss:
         print(f"Input String: '{input_str}'")  # ตรวจสอบค่าที่ส่งเข้าไป
         input_parts = input_str.split()  # แยกข้อความที่กรอกมา
         print(f"Input Parts: {input_parts}")  # ตรวจสอบค่าที่แยกได้
+
+        if len(input_parts) < 2:  # ตรวจสอบว่า input_parts มีค่าเพียงพอ
+            await channel.send("กรุณากรอกข้อมูลในรูปแบบ 'ชื่อบอส HH:MM ตำแหน่ง'")  # แจ้งเตือนผู้ใช้
+            return
+
         death_time_str = input_parts[0]
-        location = ' '.join(input_parts[1:]) if len(input_parts) > 1 else ""  # ดึงค่าตำแหน่งจาก input
+        location = ' '.join(input_parts[1:])  # ดึงค่าตำแหน่งจาก input
         print(f"Location: '{location}'")  # ตรวจสอบค่าที่แยกได้
 
         if self.add_death_time(death_time_str):
             # เพิ่ม instance ใหม่
             self.instances.append((self.death_time, location))  # เพิ่ม instance ใหม่
-            death_time, location = self.instances[-1]  # เวลาตายล่าสุด
+            death_time, _ = self.instances[-1]  # เวลาตายล่าสุด
             spawn_times = self.calculate_spawn_time(death_time)
             spawn_location_description = self.get_spawn_location()
 
