@@ -73,12 +73,15 @@ class Miniboss:
 
     async def spawn(self, input_str, channel):
         """เพิ่มเวลาตายใหม่ และเริ่มเช็คเวลาที่บอสจะเกิด"""
+        print(f"Input String: '{input_str}'")  # ตรวจสอบค่าที่ส่งเข้าไป
         input_parts = input_str.split()  # แยกข้อความที่กรอกมา
+        print(f"Input Parts: {input_parts}")  # ตรวจสอบค่าที่แยกได้
         death_time_str = input_parts[0]
         location = ' '.join(input_parts[1:]) if len(input_parts) > 1 else ""  # ดึงค่าตำแหน่งจาก input
 
         if self.add_death_time(death_time_str):
-            self.instances[-1] = (self.instances[-1][0], location)  # อัพเดตสถานที่ใน instance ล่าสุด
+            # เพิ่มข้อมูลเข้าไปใน instances เป็น tuple
+            self.instances.append((self.death_time, location))  # เพิ่ม instance ใหม่
             death_time, _ = self.instances[-1]  # เวลาตายล่าสุด
             spawn_times = self.calculate_spawn_time(death_time)
             spawn_location_description = self.get_spawn_location()
@@ -86,7 +89,7 @@ class Miniboss:
             # สร้าง embed
             embed = discord.Embed(
                 title=f"🦹‍♂️ บอส {self.name} ตายแล้ว {location}",  # เพิ่ม location ใน title
-                description=(
+                description=( 
                     f"🕒 บอส {self.name} ตายเมื่อเวลา **{death_time_str}**.\n"
                     f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_times[0].strftime('%H:%M')} - {spawn_times[1].strftime('%H:%M')}**.\n"
                     f"โดยเกิดที่ {spawn_location_description} {location}"  # เพิ่ม location ใน description
