@@ -79,7 +79,11 @@ class Miniboss:
 
         # ตรวจสอบเวลาตาย
         if self.add_death_time(death_time_str):
-            self.instances[-1] = (self.instances[-1][0], location)  # อัพเดตสถานที่ใน instance ล่าสุด
+            if len(self.instances) > 0 and isinstance(self.instances[-1], tuple):
+                self.instances[-1] = (self.instances[-1][0], location)  # อัพเดตสถานที่ใน instance ล่าสุด
+            else:
+                self.instances.append((self.death_time, location))  # เพิ่ม instance ใหม่ถ้าไม่มี
+
             death_time, _ = self.instances[-1]  # เวลาตายล่าสุด
             spawn_times = self.calculate_spawn_time(death_time)
             spawn_location_description = self.get_spawn_location()
