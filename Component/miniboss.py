@@ -11,10 +11,10 @@ class Miniboss:
     def __init__(self, bot, name, spawn_time_range, color, image_url=None):
         self.bot = bot
         self.name = name
-        self.spawn_time_range = spawn_time_range  # ช่วงเวลาที่บอสจะเกิดใหม่ เช่น (3.5, 6.5) ชั่วโมง
-        self.color = color  # สีของบอส (ใช้ในการบอกตำแหน่งเกิด)
-        self.image = image_url  # URL รูปภาพของบอส
-        self.instances = []  # เก็บเวลาตายของบอส (หลายเวลาตายได้)
+        self.spawn_time_range = spawn_time_range  
+        self.color = color  
+        self.image = image_url  
+        self.instances = []  
 
     def add_death_time(self, death_time_str):
         """เพิ่มเวลาตายให้กับบอส และสร้าง instance ใหม่ใน instances"""
@@ -40,15 +40,15 @@ class Miniboss:
             await asyncio.sleep(60)  # เช็คทุกๆ 60 วินาที
             current_time = datetime.now(TZ_THAILAND)
 
-            for death_time in self.instances[:]:  # ใช้ copy ของ list เพื่อวนลูปได้อย่างปลอดภัย
+            for death_time, location in self.instances[:]:  # ใช้ copy ของ list เพื่อวนลูปได้อย่างปลอดภัย
                 spawn_time = self.calculate_spawn_time(death_time)
 
                 if spawn_time[0] <= current_time <= spawn_time[1]:
                     spawn_location_description = self.get_spawn_location()
-                    await channel.send(f"{mention_role} บอส {self.name} เริ่มเกิดแล้วที่ {spawn_location_description}!") 
+                    await channel.send(f"{mention_role} บอส {self.name} เกิดแล้ว {location}!") 
                     embed = discord.Embed(
-                        title=f" บอส {self.name} เกิดแล้ว! 🎉",
-                        description=(f"บอส {self.name} ได้เกิดใหม่ที่ {spawn_location_description}.\n"
+                        title=f" บอส {self.name} เกิดแล้ว {location}! 🎉",
+                        description=(f"บอส {self.name} ได้เกิดใหม่ที่ {spawn_location_description} {location}. \n"
                                     f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_time[0].strftime('%H:%M')} - {spawn_time[1].strftime('%H:%M')}**."),
                         color=discord.Color.from_str(self.color)
                     )
@@ -56,7 +56,7 @@ class Miniboss:
                         embed.set_image(url=self.image)
                     await channel.send(embed=embed)
 
-                    self.instances.remove(death_time)  # ลบ instance ที่ประกาศแล้วออกจาก list
+                    self.instances.remove((death_time, location))
 
     def get_spawn_location(self):
         """แสดงสถานที่เกิดบอสตามสี"""
@@ -71,10 +71,16 @@ class Miniboss:
         else:
             return "วงสีอื่น"
 
-    async def spawn(self, death_time_str, channel):
+    async def spawn(self, input_str, channel):
         """เพิ่มเวลาตายใหม่ และเริ่มเช็คเวลาที่บอสจะเกิด"""
+        input_parts = input_str.split()  # แยกข้อความที่กรอกมา
+        death_time_str = input_parts[0]  # แยกเวลาตายจาก input
+        location = ' '.join(input_parts[1:]) if len(input_parts) > 1 else ""  # ถ้ามีข้อมูลเพิ่มเติมให้ใช้เป็นสถานที่
+
+        # ตรวจสอบเวลาตาย
         if self.add_death_time(death_time_str):
-            death_time = self.instances[-1]  
+            self.instances[-1] = (self.instances[-1][0], location)  # อัพเดตสถานที่ใน instance ล่าสุด
+            death_time, _ = self.instances[-1]  # เวลาตายล่าสุด
             spawn_times = self.calculate_spawn_time(death_time)
             spawn_location_description = self.get_spawn_location()
 
@@ -83,7 +89,7 @@ class Miniboss:
                 description=(
                     f"🕒 บอส {self.name} ตายเมื่อเวลา **{death_time_str}**.\n"
                     f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_times[0].strftime('%H:%M')} - {spawn_times[1].strftime('%H:%M')}**.\n"
-                    f"โดยเกิดที่ {spawn_location_description}"
+                    f"โดยเกิดที่ {spawn_location_description} {location}"
                 ),
                 color=discord.Color.from_str(self.color)
             )
@@ -91,6 +97,7 @@ class Miniboss:
                 embed.set_image(url=self.image)
             await channel.send(embed=embed)
 
+            # เริ่มเช็คเวลาที่บอสจะเกิด
             await self.check_spawn_time(channel)
         else:
             await channel.send("รูปแบบเวลาไม่ถูกต้อง กรุณาใช้รูปแบบ HH:MM")

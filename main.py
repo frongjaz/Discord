@@ -68,15 +68,12 @@ async def on_message(message):
                 await create_miniboss(message.channel, boss_name, death_time)
 
     await bot.process_commands(message)
+    
     if message.channel.id == GR_channel_id and message.content.isdigit():
         number = int(message.content.replace(',', ''))  # ลบคอมม่า
         username = message.author.display_name
-        # ดึงค่าที่เก่าจาก Google Sheets
         previous_value = get_previous_value(username)
-
-        # ส่งข้อมูลไปยัง Google Sheets
         response = requests.post(url, json={'name': username, 'GR_value': number})
-
         if response.status_code == 200:
 
             if previous_value is not None:
@@ -185,7 +182,7 @@ async def miniboss_list(ctx):
     embed = discord.Embed(
         title="📜 รายชื่อบอสและระยะเวลาการเกิด",
         description="นี่คือรายชื่อบอสทั้งหมดที่มีในระบบ:",
-        color=discord.Color.blue()  # คุณสามารถเลือกสีที่ต้องการ
+        color=discord.Color.blue() 
     )
 
     # วนลูปเพื่อสร้างข้อมูลบอส
@@ -204,7 +201,10 @@ async def miniboss_list(ctx):
 async def rankcommand(interaction):
     await interaction.response.send_message(rank.rank_numbers())
 
-# Start the bot and the server concurrently
+@bot.tree.command(name='boss',description='แสดงบอสทั้งหมดใน BF1 BF2' )
+async def bosscommand(interaction):
+    await interaction.response.send_message(miniboss_list())
+
 if __name__ == "__main__":
     flask_thread = Thread(target=server_on)
     flask_thread.start()
