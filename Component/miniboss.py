@@ -3,7 +3,8 @@ from datetime import datetime, timedelta
 import pytz
 import asyncio
 
-
+SweetDessert_role = 1218124815378940035
+mention_role = f"<@&{SweetDessert_role}>"
 TZ_THAILAND = pytz.timezone('Asia/Bangkok')
 
 class Miniboss:
@@ -57,8 +58,7 @@ class Miniboss:
 
                 if spawn_time[0] <= current_time <= spawn_time[1]:
                     spawn_location_description = self.get_spawn_location()
-                    await channel.send(f"บอส {self.name} เกิดแล้ว {location}!")
-                    
+                    await channel.send(f"{mention_role} บอส {self.name} เกิดแล้วที่ {spawn_location_description} {location}!") 
                     embed = discord.Embed(
                         title=f"บอส {self.name} เกิดแล้ว {location}! 🎉",
                         description=(f"บอส {self.name} ได้เกิดใหม่ที่ {spawn_location_description} {location}.\n"
@@ -88,10 +88,11 @@ class Miniboss:
                 description=(
                     f"🕒 บอส {self.name} ตายเมื่อเวลา **{death_time_str}**.\n"
                     f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_times[0].strftime('%H:%M')} - {spawn_times[1].strftime('%H:%M')}**.\n"
-                    f"โดยเกิดที่ {spawn_location_description}"
+                    f"โดยเกิดที่ {spawn_location_description} {location}"
                 ),
                 color=discord.Color.from_str(self.color)
             )
+
             if self.image:
                 embed.set_image(url=self.image)
             await channel.send(embed=embed)
