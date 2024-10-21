@@ -81,21 +81,16 @@ class Miniboss:
         print(f"Location: '{location}'")  # ตรวจสอบค่าที่แยกได้
 
         if self.add_death_time(death_time_str):
-            # ถ้า instances ยังว่าง ให้เพิ่ม instance ใหม่
-            if not self.instances:
-                self.instances.append((self.death_time, location))  # เพิ่ม instance ใหม่
-            else:
-                # อัพเดตข้อมูลใน instance ล่าสุด
-                self.instances[-1] = (self.death_time, location)  # อัพเดตสถานที่ใน instance ล่าสุด
-
-            death_time, _ = self.instances[-1]  # เวลาตายล่าสุด
+            # เพิ่ม instance ใหม่
+            self.instances.append((self.death_time, location))  # เพิ่ม instance ใหม่
+            death_time, location = self.instances[-1]  # เวลาตายล่าสุด
             spawn_times = self.calculate_spawn_time(death_time)
             spawn_location_description = self.get_spawn_location()
 
             # สร้าง embed
             embed = discord.Embed(
                 title=f"🦹‍♂️ บอส {self.name} ตายแล้ว {location}",  # เพิ่ม location ใน title
-                description=( 
+                description=(
                     f"🕒 บอส {self.name} ตายเมื่อเวลา **{death_time_str}**.\n"
                     f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_times[0].strftime('%H:%M')} - {spawn_times[1].strftime('%H:%M')}**.\n"
                     f"โดยเกิดที่ {spawn_location_description} {location}"  # เพิ่ม location ใน description
