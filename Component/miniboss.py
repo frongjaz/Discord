@@ -81,8 +81,13 @@ class Miniboss:
         print(f"Location: '{location}'")  # ตรวจสอบค่าที่แยกได้
 
         if self.add_death_time(death_time_str):
-            # เพิ่มข้อมูลเข้าไปใน instances เป็น tuple
-            self.instances.append((self.death_time, location))  # เพิ่ม instance ใหม่
+            # ถ้า instances ยังว่าง ให้เพิ่ม instance ใหม่
+            if not self.instances:
+                self.instances.append((self.death_time, location))  # เพิ่ม instance ใหม่
+            else:
+                # อัพเดตข้อมูลใน instance ล่าสุด
+                self.instances[-1] = (self.death_time, location)  # อัพเดตสถานที่ใน instance ล่าสุด
+
             death_time, _ = self.instances[-1]  # เวลาตายล่าสุด
             spawn_times = self.calculate_spawn_time(death_time)
             spawn_location_description = self.get_spawn_location()
