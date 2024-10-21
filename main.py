@@ -28,6 +28,10 @@ minibosses = [
     miniboss.Miniboss(bot, "คิอารอน", (4.5, 7.5), "#FF0000", "https://img2.pic.in.th/pic/f5af6ac6a95ac458c9ce84009e113e40.png"),
     miniboss.Miniboss(bot, "กริซ", (5.5, 8.5), "#0000FF", "https://img5.pic.in.th/file/secure-sv1/fedd60ce9d12fa6e087066cb11d08615.png"),
     miniboss.Miniboss(bot, "อินเฟรโน", (6.5, 9.5), "#00FF00", "https://img5.pic.in.th/file/secure-sv1/50b2d485c60420674a6962f1da60311a.png"),
+    miniboss.Miniboss(bot,"รีอันเต",(5.5,8.5),"#00FF00","https://img2.pic.in.th/pic/19ef590c49fd82d7bd82628b79068065.png"),
+    miniboss.Miniboss(bot,"เซรอน",(6.5,9.5),"#0000FF","https://img5.pic.in.th/file/secure-sv1/dbb09775942d744201c9a53e3829f66a.png"),
+    miniboss.Miniboss(bot,"โกสต์มอล",(7.5,10.5),"#FF0000","https://img5.pic.in.th/file/secure-sv1/cff5951bcbb5235e295f07bc6eea77f6.png"),
+    miniboss.Miniboss(bot,"เกเฮนน่า",(8.5,11.5),"#000000","https://img2.pic.in.th/pic/9f10c253aacb807c301ab596e8076f7a.png"), 
 ]
 
 # เมื่อบอทพร้อมทำงาน
@@ -199,21 +203,6 @@ async def miniboss_list(ctx):
 @bot.tree.command(name='rank', description='แสดง rank ของคนมี HSOA')
 async def rankcommand(interaction):
     await interaction.response.send_message(rank.rank_numbers())
-
-@bot.tree.command(name='boss_info', description='แสดงข้อมูลบอสที่เลือก')
-async def boss_info(interaction: discord.Interaction, boss_name: str):
-    miniboss = next((b for b in miniboss.minibosses if b.name == boss_name), None)
-
-    if miniboss:
-        embed = discord.Embed(
-            title=f"ข้อมูลบอส: {miniboss.name}",
-            description=f"บอสจะเกิดใน {miniboss.spawn_time_range[0]} - {miniboss.spawn_time_range[1]} ชั่วโมงหลังจากตาย",
-            color=discord.Color.blue()
-        )
-        embed.set_image(url=miniboss.image)
-        await interaction.response.send_message(embed=embed)
-    else:
-        await interaction.response.send_message("ไม่พบข้อมูลบอสที่เลือก.")
 
 # Start the bot and the server concurrently
 if __name__ == "__main__":
