@@ -1,6 +1,8 @@
 import discord
 from datetime import datetime, timedelta
 import pytz
+import asyncio
+
 
 TZ_THAILAND = pytz.timezone('Asia/Bangkok')
 
@@ -82,7 +84,7 @@ class Miniboss:
             spawn_location_description = self.get_spawn_location()
             
             embed = discord.Embed(
-                title=f"🦹‍♂️ บอส {self.name} ตายแล้ว",
+                title=f"🦹‍♂️ บอส {self.name} ตายแล้ว {location}",
                 description=(
                     f"🕒 บอส {self.name} ตายเมื่อเวลา **{death_time_str}**.\n"
                     f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_times[0].strftime('%H:%M')} - {spawn_times[1].strftime('%H:%M')}**.\n"
