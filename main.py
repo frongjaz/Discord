@@ -62,7 +62,7 @@ async def on_message(message):
             if len(parts) >= 2 and parts[0] == boss_name:
                 death_time = parts[1]  
                 await create_miniboss(message.channel, boss_name, death_time)
-     
+
     await bot.process_commands(message)
     if message.channel.id == GR_channel_id and message.content.isdigit():
         number = int(message.content.replace(',', ''))  # ลบคอมม่า
