@@ -78,6 +78,7 @@ class Miniboss:
         print(f"Input Parts: {input_parts}")  # ตรวจสอบค่าที่แยกได้
         death_time_str = input_parts[0]
         location = ' '.join(input_parts[1:]) if len(input_parts) > 1 else ""  # ดึงค่าตำแหน่งจาก input
+        print(f"Location: '{location}'")  # ตรวจสอบค่าที่แยกได้
 
         if self.add_death_time(death_time_str):
             # เพิ่มข้อมูลเข้าไปใน instances เป็น tuple
