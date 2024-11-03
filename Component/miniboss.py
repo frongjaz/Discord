@@ -1,89 +1,104 @@
 import discord
 from datetime import datetime, timedelta
-import asyncio
 import pytz
+import asyncio
 
-TZ_THAILAND = pytz.timezone('Asia/Bangkok')
 SweetDessert_role = 1218124815378940035
 mention_role = f"<@&{SweetDessert_role}>"
+TZ_THAILAND = pytz.timezone('Asia/Bangkok')
 
 class Miniboss:
     def __init__(self, bot, name, spawn_time_range, color, image_url=None):
         self.bot = bot
         self.name = name
-        self.spawn_time_range = spawn_time_range  # ช่วงเวลาที่บอสจะเกิดใหม่ เช่น (3.5, 6.5) ชั่วโมง
-        self.color = color  # สีของบอส (ใช้ในการบอกตำแหน่งเกิด)
-        self.image = image_url  # URL รูปภาพของบอส
-        self.instances = []  # เก็บเวลาตายของบอส (หลายเวลาตายได้)
+        self.spawn_time_range = spawn_time_range
+        self.color = color
+        self.image = image_url
+        self.instances = []  # สร้าง list เพื่อเก็บ instances ของ death_time และ location
 
     def add_death_time(self, death_time_str):
-        """เพิ่มเวลาตายให้กับบอส และสร้าง instance ใหม่ใน instances"""
+        """เพิ่มเวลาตาย"""
         try:
             now = datetime.now(TZ_THAILAND)
             death_time = datetime.strptime(death_time_str, '%H:%M').replace(
                 year=now.year, month=now.month, day=now.day)
             death_time = TZ_THAILAND.localize(death_time)
-            self.instances.append(death_time)  # เพิ่มเวลาตายใหม่เข้าไปใน instances
+            self.death_time = death_time  # ตั้งค่า death_time
             return True
         except ValueError:
             return False
 
     def calculate_spawn_time(self, death_time):
-        """คำนวณเวลาที่บอสจะเกิดใหม่ โดยอิงจากเวลาตายที่ให้มา"""
+        """คำนวณเวลาที่บอสจะเกิดใหม่ โดยอิงจากช่วงเวลาที่กำหนด"""
         min_spawn_time = death_time + timedelta(hours=self.spawn_time_range[0])
         max_spawn_time = death_time + timedelta(hours=self.spawn_time_range[1])
         return (min_spawn_time, max_spawn_time)
 
+    def get_spawn_location(self):
+        """แสดงจุดเกิดตามสี"""
+        if self.color == "#000000":
+            return "ที่วงสีดำ"
+        elif self.color == "#FF0000":
+            return "ที่วงสีแดง"
+        elif self.color == "#0000FF":
+            return "ที่วงสีฟ้า"
+        elif self.color == "#00FF00":
+            return "ที่วงสีเขียว"
+        else:
+            return "ที่วงสีอื่น"
+
     async def check_spawn_time(self, channel):
-        """ตรวจสอบและประกาศเวลาที่บอสจะเกิดใหม่สำหรับทุก instance ที่มีอยู่"""
+        """ตรวจสอบเวลาที่บอสจะเกิด"""
         while True:
-            await asyncio.sleep(60)  # เช็คทุกๆ 60 วินาที
+            await asyncio.sleep(60)
             current_time = datetime.now(TZ_THAILAND)
 
-            for death_time in self.instances[:]:  # ใช้ copy ของ list เพื่อวนลูปได้อย่างปลอดภัย
+            for death_time, location in self.instances[:]:  # ใช้ copy ของ list เพื่อวนลูปได้อย่างปลอดภัย
                 spawn_time = self.calculate_spawn_time(death_time)
 
                 if spawn_time[0] <= current_time <= spawn_time[1]:
                     spawn_location_description = self.get_spawn_location()
-                    await channel.send(f"{mention_role} บอส {self.name} เริ่มเกิดแล้วที่ {spawn_location_description}!") 
+                    await channel.send(f"{mention_role} บอส {self.name} เกิดแล้ว {spawn_location_description} {location}!") 
                     embed = discord.Embed(
-                        title=f" บอส {self.name} เกิดแล้ว! 🎉",
-                        description=(f"บอส {self.name} ได้เกิดใหม่ที่ {spawn_location_description}.\n"
-                                    f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_time[0].strftime('%H:%M')} - {spawn_time[1].strftime('%H:%M')}**."),
+                        title=f"บอส {self.name} เกิดแล้ว {location}! 🎉",
+                        description=(f"บอส {self.name} ได้เกิดใหม่ที่ {spawn_location_description} {location}.\n"
+                                     f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_time[0].strftime('%H:%M')} - {spawn_time[1].strftime('%H:%M')}**."),
                         color=discord.Color.from_str(self.color)
                     )
                     if self.image:
                         embed.set_image(url=self.image)
                     await channel.send(embed=embed)
 
-                    self.instances.remove(death_time)  # ลบ instance ที่ประกาศแล้วออกจาก list
+                    self.instances.remove((death_time, location))  # ลบ instance ที่บอสเกิดแล้วออก
 
-    def get_spawn_location(self):
-        """แสดงสถานที่เกิดบอสตามสี"""
-        if self.color == "#000000":
-            return "วงสีดำ"
-        elif self.color == "#FF0000":
-            return "วงสีแดง"
-        elif self.color == "#0000FF":
-            return "วงสีฟ้า"
-        elif self.color == "#00FF00":
-            return "วงสีเขียว"
-        else:
-            return "วงสีอื่น"
-
-    async def spawn(self, death_time_str, channel):
+    async def spawn(self, input_str, channel):
         """เพิ่มเวลาตายใหม่ และเริ่มเช็คเวลาที่บอสจะเกิด"""
+        print(f"Input String: '{input_str}'")  # ตรวจสอบค่าที่ส่งเข้าไป
+        input_parts = input_str.split()  # แยกข้อความที่กรอกมา
+        print(f"Input Parts: {input_parts}")  # ตรวจสอบค่าที่แยกได้
+
+        if len(input_parts) < 2:  # ตรวจสอบว่า input_parts มีค่าเพียงพอ
+            await channel.send("กรุณากรอกข้อมูลในรูปแบบ 'ชื่อบอส HH:MM ตำแหน่ง'")  # แจ้งเตือนผู้ใช้
+            return
+
+        death_time_str = input_parts[0]
+        location = ' '.join(input_parts[1:])  # ดึงค่าตำแหน่งจาก input
+        print(f"Location: '{location}'")  # ตรวจสอบค่าที่แยกได้
+
         if self.add_death_time(death_time_str):
-            death_time = self.instances[-1]  
+            # เพิ่ม instance ใหม่
+            self.instances.append((self.death_time, location))  # เพิ่ม instance ใหม่
+            death_time, _ = self.instances[-1]  # เวลาตายล่าสุด
             spawn_times = self.calculate_spawn_time(death_time)
             spawn_location_description = self.get_spawn_location()
 
+            # สร้าง embed
             embed = discord.Embed(
-                title=f"🦹‍♂️ บอส {self.name} ตายแล้ว",
+                title=f"🦹‍♂️ บอส {self.name} ตายแล้ว {location}",  # เพิ่ม location ใน title
                 description=(
                     f"🕒 บอส {self.name} ตายเมื่อเวลา **{death_time_str}**.\n"
                     f"⏳ บอสจะเกิดในช่วงเวลา **{spawn_times[0].strftime('%H:%M')} - {spawn_times[1].strftime('%H:%M')}**.\n"
-                    f"โดยเกิดที่ {spawn_location_description}"
+                    f"โดยเกิดที่ {spawn_location_description} {location}"  # เพิ่ม location ใน description
                 ),
                 color=discord.Color.from_str(self.color)
             )
