@@ -21,7 +21,7 @@ icon = "https://i.imgur.com/ZdfJpK4.png"
 target_channel_id = 1290924217184948236
 GR_channel_id = 1242868461982580807
 SweetDessert_role = 1218124815378940035
-url = 'https://script.google.com/macros/s/AKfycbxdlxls3pHHab_b_fGVdBjGUNsczUGiOKrdd3STi-BFudmRZHLrfaARResrkuUPs_Tn1w/exec'
+url = 'https://script.google.com/macros/s/AKfycbyA1NsScYpN6MpdKVn8FXHdnwiK2jPnk34WzDsvzm-OtcD5oXO9rUuj4rMoRSaMRSqzGw/exec'
 
 minibosses = [
     miniboss.Miniboss(bot, "อังโกลท์", (3.5, 6.5), "#000000", "https://img2.pic.in.th/pic/baf275d47676440180d1717c8c2198c4.png"),
