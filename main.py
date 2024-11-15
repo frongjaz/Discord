@@ -56,7 +56,7 @@ async def on_ready():
     print(f'Logged in as {bot.user}')
     try:
         synced = await bot.tree.sync()
-        bot.add_cog(Music(bot))
+        await bot.add_cog(Music(bot))
         print(f"Synced {len(synced)} commands")
     except Exception as e:
         print(f"Error syncing commands: {e}")
