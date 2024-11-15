@@ -2,6 +2,7 @@ import os
 import random
 import discord
 import requests
+import youtube_dl
 from music import Music
 from discord.ext import commands
 from threading import Thread
