@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import youtube_dl
 import asyncio
+import yt_dlp as youtube_dl
 
 ytdl_format_options = {
     'format': 'bestaudio/best',
@@ -45,10 +46,17 @@ class Music(commands.Cog):
     @commands.command(name='join', help='ให้บอทเข้าร่วมห้องเสียง')
     async def join(self, ctx):
         if ctx.author.voice:
+            # ตรวจสอบว่าบอทเชื่อมต่ออยู่ใน channel หรือไม่
+            if ctx.voice_client is not None:
+                return await ctx.send("บอทเชื่อมต่อกับห้องเสียงอยู่แล้ว")
+            
+            # ถ้ายังไม่ได้เชื่อมต่อ, ให้บอทเชื่อมต่อ
             channel = ctx.author.voice.channel
             await channel.connect()
+            await ctx.send(f"บอทเข้าร่วมช่อง {channel.name} แล้ว")
         else:
             await ctx.send("คุณต้องอยู่ในห้องเสียงเพื่อให้บอทร่วม")
+
 
     @commands.command(name='play', help='เล่นเพลงจาก YouTube')
     async def play(self, ctx, *, url):
