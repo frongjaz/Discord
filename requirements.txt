@@ -21,3 +21,4 @@ oauth2client==4.1.3
 pytz
 yt-dlp
 PyNaCl
+youtube_dl
