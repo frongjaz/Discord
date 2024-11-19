@@ -54,12 +54,15 @@ class Music(commands.Cog):
         else:
             await ctx.send("คุณต้องอยู่ในห้องเสียงเพื่อให้บอทร่วม")
 
-    @commands.command(name='play', help='เล่นเพลงจาก YouTube')
+    @commands.command(name="play")
     async def play(self, ctx, *, url):
-        async with ctx.typing():
-            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(player, after=lambda e: print(f'Error: {e}') if e else None)
-        await ctx.send(f'🎶 กำลังเล่น: {player.title}')
+        try:
+            async with ctx.typing():
+                player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+                ctx.voice_client.play(player, after=lambda e: print(f'Error: {e}') if e else None)
+            await ctx.send(f'🎶 กำลังเล่น: {player.title}')
+        except Exception as e:
+            await ctx.send(f"❌ ไม่สามารถเล่นเพลงได้: {str(e)}")
 
     @commands.command(name='pause', help='หยุดเพลงชั่วคราว')
     async def pause(self, ctx):
