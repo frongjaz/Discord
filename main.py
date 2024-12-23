@@ -57,6 +57,7 @@ async def on_ready():
     try:
         synced = await bot.tree.sync()
         await bot.add_cog(Music(bot))
+        await bot.load_extension("cogs.random_picker")
         print(f"Synced {len(synced)} commands")
     except Exception as e:
         print(f"Error syncing commands: {e}")
@@ -229,15 +230,6 @@ async def load_extensions():
     except Exception as e:
         print(f"Error loading 'random_picker': {e}")
 
-async def main():
-
-    await bot.load_extension("cogs.random_picker")
-    token = os.getenv("TOKEN")
-    if token is None:
-        raise ValueError("TOKEN not found in environment variables")
-    
-    await bot.start(token)
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    bot.run(os.getenv("TOKEN"))

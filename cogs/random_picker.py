@@ -30,6 +30,6 @@ class RandomPicker(commands.Cog):
         chosen_name = random.choice(names)
         await msg.edit(content=f"🎰 ชื่อที่สุ่มได้: {chosen_name}")
 
-# ฟังก์ชันที่ไม่ต้องใช้ await
+# ฟังก์ชัน setup ไม่ต้องใช้ await ที่นี่
 def setup(bot):
-    bot.add_cog(RandomPicker(bot))  # ไม่ต้อง await ที่นี่
+    bot.add_cog(RandomPicker(bot))  # ไม่ต้อง await
