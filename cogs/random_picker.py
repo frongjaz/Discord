@@ -50,5 +50,6 @@ class RandomPicker(commands.Cog):
         result_text = f"🎉 ชื่อที่สุ่มได้คือ: **{winner}** 🎊"
         await ctx.edit_last_message(content=result_text)
 
-def setup(bot):
-    bot.add_cog(RandomPicker(bot))
+async def setup(bot):
+    await bot.add_cog(RandomPicker(bot))
+
