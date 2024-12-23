@@ -232,6 +232,7 @@ async def load_extensions():
 
 async def main():
     await bot.load_extension("cogs.random_picker")
+    port = os.getenv("PORT", 8080)
     await bot.start(os.getenv("TOKEN"))
 
 if __name__ == "__main__":
