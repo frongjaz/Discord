@@ -11,6 +11,7 @@ from Component import new_member
 from Component import noti_c3  
 from Component import rank  
 from Component import miniboss
+import asyncio
 
 intents = discord.Intents.default()
 intents.guilds = True
@@ -222,12 +223,17 @@ async def rankcommand(interaction):
 async def bosscommand(interaction):
     await interaction.response.send_message(miniboss_list())
 
-if __name__ == "__main__":
-    flask_thread = Thread(target=server_on)
-    flask_thread.start()
+async def load_extensions():
     try:
-        bot.load_extension("cogs.random_picker")  # โหลดระบบสุ่ม
+        await bot.load_extension("cogs.random_picker")  # โหลดระบบสุ่ม
+        print("Loaded 'random_picker' Cog successfully!")
     except Exception as e:
-        print(f"Error loading extension: {e}")
+        print(f"Error loading 'random_picker': {e}")
 
-    bot.run(os.getenv('TOKEN'))
+async def main():
+    async with bot:
+        await load_extensions()  # เรียกฟังก์ชันโหลด extension
+        await bot.start("YOUR_BOT_TOKEN")
+
+if __name__ == "__main__":
+    asyncio.run(main())
