@@ -225,4 +225,9 @@ async def bosscommand(interaction):
 if __name__ == "__main__":
     flask_thread = Thread(target=server_on)
     flask_thread.start()
+    try:
+        bot.load_extension("cogs.random_picker")  # โหลดระบบสุ่ม
+    except Exception as e:
+        print(f"Error loading extension: {e}")
+
     bot.run(os.getenv('TOKEN'))
