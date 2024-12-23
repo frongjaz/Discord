@@ -8,8 +8,10 @@ class RandomPicker(commands.Cog):
 
     @commands.command()
     async def random(self, ctx):
+        # ข้อความเริ่มต้น
         msg = await ctx.send("🎰 กำลังสุ่มรายชื่อ...")
 
+        # รายชื่อที่สุ่ม
         names = [
             "Moo Deng Za Mak", "Aeolus_Kevin", "สุดหล่อ(BEER)", "OliverxX",
             "SD TARANTAMAD • assasin", "FPXD.", "SD | ReaLBesT", "88888888 (เอก)",
@@ -19,12 +21,15 @@ class RandomPicker(commands.Cog):
             "REGENCY", "Bumble", "Stal2Du5T"
         ]
 
-        for _ in range(5):  # สุ่มชื่อ 5 ครั้ง
-            await msg.edit(content="🔄 กำลังสุ่มชื่อ...")
+        # สุ่มชื่อทุกๆ 0.5 วินาที
+        for _ in range(5):  # เปลี่ยนข้อความ 5 ครั้ง
+            await msg.edit(content=f"🎰 กำลังสุ่ม: {random.choice(names)}")
             await asyncio.sleep(0.5)  # รอ 0.5 วินาที
 
+        # ผลลัพธ์การสุ่ม
         chosen_name = random.choice(names)
         await msg.edit(content=f"🎰 ชื่อที่สุ่มได้: {chosen_name}")
 
+# ฟังก์ชันที่ไม่ต้องใช้ await
 def setup(bot):
-    bot.add_cog(RandomPicker(bot))
+    bot.add_cog(RandomPicker(bot))  # ไม่ต้อง await ที่นี่
