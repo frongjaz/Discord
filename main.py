@@ -11,7 +11,6 @@ from Component import new_member
 from Component import noti_c3  
 from Component import rank  
 from Component import miniboss
-import asyncio
 
 intents = discord.Intents.default()
 intents.guilds = True
@@ -231,9 +230,14 @@ async def load_extensions():
         print(f"Error loading 'random_picker': {e}")
 
 async def main():
+
     await bot.load_extension("cogs.random_picker")
-    port = os.getenv("PORT", 8080)
-    await bot.start(os.getenv("TOKEN"))
+    token = os.getenv("TOKEN")
+    if token is None:
+        raise ValueError("TOKEN not found in environment variables")
+    
+    await bot.start(token)
 
 if __name__ == "__main__":
+    import asyncio
     asyncio.run(main())
