@@ -233,7 +233,7 @@ async def load_extensions():
 async def main():
     async with bot:
         await load_extensions()  # เรียกฟังก์ชันโหลด extension
-        await bot.start("YOUR_BOT_TOKEN")
+        await bot.start("TOKEN")
 
 if __name__ == "__main__":
     asyncio.run(main())
