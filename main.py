@@ -231,9 +231,8 @@ async def load_extensions():
         print(f"Error loading 'random_picker': {e}")
 
 async def main():
-    async with bot:
-        await load_extensions()  # เรียกฟังก์ชันโหลด extension
-        await bot.run(os.getenv('TOKEN'))
+    await bot.load_extension("cogs.random_picker")
+    await bot.start(os.getenv("TOKEN"))
 
 if __name__ == "__main__":
     asyncio.run(main())
